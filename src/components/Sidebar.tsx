@@ -1,126 +1,99 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
-  const [email, setEmail] = useState('');
-
   const recentPosts = [
-    { id: 1, title: '10 Best Investment Apps for Beginners', date: '2024-01-15' },
-    { id: 2, title: 'How to Build an Emergency Fund Fast', date: '2024-01-12' },
-    { id: 3, title: 'Credit Card Rewards: Maximize Your Benefits', date: '2024-01-10' },
-    { id: 4, title: 'Real Estate Investment Trusts Explained', date: '2024-01-08' },
+    {
+      id: 1,
+      title: 'The Complete Guide to Index Fund Investing',
+      date: '2024-01-20'
+    },
+    {
+      id: 2,
+      title: 'High-Yield Savings Accounts: Best Options',
+      date: '2024-01-18'
+    },
+    {
+      id: 3,
+      title: 'Credit Card Churning: Risks and Rewards',
+      date: '2024-01-15'
+    }
   ];
 
   const categories = [
     { name: 'Investing', count: 25 },
     { name: 'Personal Finance', count: 18 },
     { name: 'Credit Cards', count: 12 },
-    { name: 'Loans', count: 15 },
-    { name: 'Saving Tips', count: 20 },
     { name: 'Retirement', count: 10 },
+    { name: 'Real Estate', count: 8 }
   ];
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Newsletter signup:', email);
-    setEmail('');
-    // Add your newsletter signup logic here
-  };
-
   return (
-    <aside className="w-full lg:w-80 space-y-8">
-      {/* Top AdSense Slot */}
+    <aside className="space-y-8">
+      {/* AdSense Slot */}
       <div className="adsense-slot h-64">
-        <!-- Google AdSense Sidebar Top Code Here -->
+        {/* Google AdSense Sidebar Code Here */}
       </div>
 
       {/* Newsletter Signup */}
-      <div className="bg-accent/10 p-6 rounded-lg border">
-        <h3 className="text-lg font-semibold text-primary mb-4">
-          💰 Financial Newsletter
-        </h3>
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Subscribe to Our Newsletter</h3>
         <p className="text-gray-600 mb-4 text-sm">
-          Get weekly insights on investing, saving, and building wealth delivered to your inbox.
+          Get the latest financial insights delivered to your inbox weekly.
         </p>
-        <form onSubmit={handleNewsletterSubmit} className="space-y-3">
+        <form className="space-y-3">
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            required
+            placeholder="Your email address"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
           />
           <button
             type="submit"
-            className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors font-medium"
+            className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary/90 transition-colors font-medium text-sm"
           >
-            Subscribe Free
+            Subscribe
           </button>
         </form>
-        <p className="text-xs text-gray-500 mt-2">
-          No spam. Unsubscribe anytime.
-        </p>
-      </div>
-
-      {/* Categories */}
-      <div className="bg-white p-6 rounded-lg border shadow-sm">
-        <h3 className="text-lg font-semibold text-primary mb-4">Categories</h3>
-        <ul className="space-y-2">
-          {categories.map((category) => (
-            <li key={category.name}>
-              <Link
-                to={`/categories/${category.name.toLowerCase().replace(' ', '-')}`}
-                className="flex justify-between items-center py-1 text-gray-700 hover:text-primary transition-colors"
-              >
-                <span>{category.name}</span>
-                <span className="text-sm text-gray-500">({category.count})</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
       </div>
 
       {/* Recent Posts */}
-      <div className="bg-white p-6 rounded-lg border shadow-sm">
-        <h3 className="text-lg font-semibold text-primary mb-4">Recent Posts</h3>
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Recent Posts</h3>
         <div className="space-y-4">
           {recentPosts.map((post) => (
-            <div key={post.id} className="border-b border-gray-100 pb-3 last:border-b-0">
-              <Link
+            <div key={post.id} className="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0">
+              <Link 
                 to={`/blog/${post.id}`}
-                className="block hover:text-primary transition-colors"
+                className="text-gray-900 hover:text-primary transition-colors font-medium text-sm leading-tight line-clamp-2"
               >
-                <h4 className="font-medium text-sm mb-1 line-clamp-2">
-                  {post.title}
-                </h4>
-                <p className="text-xs text-gray-500">{post.date}</p>
+                {post.title}
               </Link>
+              <p className="text-gray-500 text-xs mt-1">{post.date}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Middle AdSense Slot */}
-      <div className="adsense-slot h-64">
-        <!-- Google AdSense Sidebar Middle Code Here -->
-      </div>
-
-      {/* Tags Cloud */}
-      <div className="bg-white p-6 rounded-lg border shadow-sm">
-        <h3 className="text-lg font-semibold text-primary mb-4">Popular Tags</h3>
-        <div className="flex flex-wrap gap-2">
-          {['Investing', 'Stocks', 'ETFs', 'Budgeting', 'Retirement', 'Credit Score', 'Real Estate', 'Cryptocurrency'].map((tag) => (
+      {/* Categories */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Categories</h3>
+        <div className="space-y-2">
+          {categories.map((category, index) => (
             <Link
-              key={tag}
-              to={`/tags/${tag.toLowerCase()}`}
-              className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-primary hover:text-white transition-colors"
+              key={index}
+              to={`/category/${category.name.toLowerCase().replace(' ', '-')}`}
+              className="flex items-center justify-between py-2 px-3 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors rounded text-sm"
             >
-              {tag}
+              <span>{category.name}</span>
+              <span className="text-gray-500 text-xs">({category.count})</span>
             </Link>
           ))}
         </div>
+      </div>
+
+      {/* Another AdSense Slot */}
+      <div className="adsense-slot h-64">
+        {/* Google AdSense Sidebar Bottom Code Here */}
       </div>
     </aside>
   );

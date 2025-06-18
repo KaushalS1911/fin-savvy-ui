@@ -234,6 +234,7 @@ const Contact = () => {
                 </a>
               </div>
             </div>
+          </div>
         </div>
 
         {/* Google Map Placeholder */}

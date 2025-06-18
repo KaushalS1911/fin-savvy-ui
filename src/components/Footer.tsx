@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +8,7 @@ const Footer = () => {
       <div className="bg-gray-100 py-4">
         <div className="max-w-7xl mx-auto px-4">
           <div className="adsense-slot h-24">
-            <!-- Google AdSense Footer Code Here -->
+            {/* Google AdSense Footer Code Here */}
           </div>
         </div>
       </div>
