@@ -59,7 +59,7 @@ const About = () => {
         {/* Top AdSense */}
         <div className="mb-12">
           <div className="adsense-slot h-24">
-            <!-- Google AdSense About Top Code Here -->
+            {/* Google AdSense About Top Code Here */}
           </div>
         </div>
 
@@ -143,7 +143,7 @@ const About = () => {
         {/* Mid-content AdSense */}
         <div className="mb-12">
           <div className="adsense-slot h-32">
-            <!-- Google AdSense About Middle Code Here -->
+            {/* Google AdSense About Middle Code Here */}
           </div>
         </div>
 

@@ -215,7 +215,7 @@ const Index = () => {
             {/* In-content AdSense */}
             <div className="mb-8">
               <div className="adsense-slot h-32">
-                <!-- Google AdSense In-Content Code Here -->
+                {/* Google AdSense In-Content Code Here */}
               </div>
             </div>
 

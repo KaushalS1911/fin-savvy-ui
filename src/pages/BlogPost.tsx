@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
@@ -145,7 +144,7 @@ const BlogPost = () => {
             {/* In-article AdSense */}
             <div className="my-8">
               <div className="adsense-slot h-32">
-                <!-- Google AdSense In-Article Code Here -->
+                {/* Google AdSense In-Article Code Here */}
               </div>
             </div>
 
@@ -214,7 +213,7 @@ const BlogPost = () => {
               <h3 className="text-lg font-semibold mb-4">Comments</h3>
               <div className="text-center py-8 text-gray-500">
                 <p>Comments section will be integrated with Disqus or similar service.</p>
-                <p className="text-sm mt-2"><!-- Disqus Comments Code Here --></p>
+                <p className="text-sm mt-2">{/* Disqus Comments Code Here */}</p>
               </div>
             </div>
           </div>
@@ -224,7 +223,7 @@ const BlogPost = () => {
             {/* Sticky AdSense */}
             <div className="sticky top-8 space-y-6">
               <div className="adsense-slot h-64">
-                <!-- Google AdSense Sticky Sidebar Code Here -->
+                {/* Google AdSense Sticky Sidebar Code Here */}
               </div>
               
               {/* Share Buttons */}

@@ -129,7 +129,7 @@ const Search = () => {
         {/* Top AdSense */}
         <div className="mb-8">
           <div className="adsense-slot h-24">
-            <!-- Google AdSense Search Top Code Here -->
+            {/* Google AdSense Search Top Code Here */}
           </div>
         </div>
 
@@ -246,7 +246,7 @@ const Search = () => {
         {hasSearched && searchResults.length > 0 && (
           <div className="my-12">
             <div className="adsense-slot h-32">
-              <!-- Google AdSense Search Results Code Here -->
+              {/* Google AdSense Search Results Code Here */}
             </div>
           </div>
         )}

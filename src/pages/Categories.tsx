@@ -103,7 +103,7 @@ const Categories = () => {
         {/* Top AdSense */}
         <div className="mb-8">
           <div className="adsense-slot h-24">
-            <!-- Google AdSense Categories Top Code Here -->
+            {/* Google AdSense Categories Top Code Here */}
           </div>
         </div>
 
@@ -147,7 +147,7 @@ const Categories = () => {
         {/* Mid-content AdSense */}
         <div className="mb-12">
           <div className="adsense-slot h-32">
-            <!-- Google AdSense Categories Middle Code Here -->
+            {/* Google AdSense Categories Middle Code Here */}
           </div>
         </div>
 

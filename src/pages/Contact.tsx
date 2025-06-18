@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -43,7 +42,7 @@ const Contact = () => {
         {/* Top AdSense */}
         <div className="mb-12">
           <div className="adsense-slot h-24">
-            <!-- Google AdSense Contact Top Code Here -->
+            {/* Google AdSense Contact Top Code Here */}
           </div>
         </div>
 
@@ -178,7 +177,7 @@ const Contact = () => {
 
             {/* Sidebar AdSense */}
             <div className="adsense-slot h-64">
-              <!-- Google AdSense Contact Sidebar Code Here -->
+              {/* Google AdSense Contact Sidebar Code Here */}
             </div>
 
             {/* Office Hours */}
@@ -242,7 +241,7 @@ const Contact = () => {
           <div className="h-96 bg-gray-200 flex items-center justify-center">
             <div className="text-center text-gray-500">
               <p className="text-lg font-semibold mb-2">Interactive Google Map</p>
-              <p className="text-sm"><!-- Google Maps Embed Code Here --></p>
+              <p className="text-sm">{/* Google Maps Embed Code Here */}</p>
               <p className="text-sm mt-2">123 Finance Street, New York, NY 10001</p>
             </div>
           </div>
