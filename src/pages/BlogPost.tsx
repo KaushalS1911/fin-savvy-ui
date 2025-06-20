@@ -236,9 +236,7 @@ const BlogPost = () => {
                   <button className="flex-1 bg-blue-400 text-white py-2 px-3 rounded text-sm hover:bg-blue-500 transition-colors">
                     Twitter
                   </button>
-                  <button className="flex-1 bg-blue-800 text-white py-2 px-3 rounded text-sm hover:bg-blue-900 transition-colors">
-                    LinkedIn
-                  </button>
+
                 </div>
               </div>
             </div>
