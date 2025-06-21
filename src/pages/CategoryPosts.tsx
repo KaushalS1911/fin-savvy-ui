@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
-import { Link } from 'react-router-dom';
-import { getBlogs } from '../lib/api';
+import { getBlogs, getCategories } from '../lib/api';
 import { PostCardSkeleton } from '../components/SkeletonLoader';
 
 interface Post {
@@ -21,32 +21,56 @@ interface Post {
   };
 }
 
-const Blog = () => {
+interface Category {
+    _id: string;
+    name: string;
+    description: string;
+}
+
+const CategoryPosts = () => {
+  const { categorySlug } = useParams<{ categorySlug: string }>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [allPosts, setAllPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const postsPerPage = 6;
 
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchPosts = async () => {
       try {
-        const data = await getBlogs();
-        setAllPosts(data);
+        setLoading(true);
+        const allPosts = await getBlogs();
+        const allCategories = await getCategories();
+        
+        const currentCategory = allCategories.find(
+          (cat: Category) => cat.name.toLowerCase().replace(/\s+/g, '-') === categorySlug
+        );
+        
+        if (currentCategory) {
+          setCategory(currentCategory);
+          const categoryPosts = allPosts.filter(
+            (post: Post) => post.category.name === currentCategory.name
+          );
+          setPosts(categoryPosts);
+        } else {
+          setError('Category not found.');
+        }
+
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch blog posts.');
+        setError('Failed to fetch data.');
         setLoading(false);
       }
     };
 
-    fetchBlogs();
-  }, []);
+    fetchPosts();
+  }, [categorySlug]);
 
-  const totalPages = Math.ceil(allPosts.length / postsPerPage);
+  const totalPages = Math.ceil(posts.length / postsPerPage);
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = allPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -84,17 +108,16 @@ const Blog = () => {
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Financial Blog</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Category: {category?.name}
+          </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover expert insights on investing, personal finance, and wealth building strategies 
-            to help you achieve your financial goals.
+            {category?.description}
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Blog Posts */}
           <div className="lg:col-span-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {currentPosts.map((post) => (
@@ -138,7 +161,6 @@ const Blog = () => {
               ))}
             </div>
 
-            {/* Pagination */}
             <div className="flex justify-center items-center space-x-2 mb-8">
               <button
                 onClick={() => paginate(currentPage - 1)}
@@ -170,16 +192,7 @@ const Blog = () => {
                 Next
               </button>
             </div>
-
-            {/* Mid-content AdSense */}
-            <div className="mb-8">
-              <div className="adsense-slot h-32">
-                {/* Google AdSense Mid-Content Code Here */}
-              </div>
-            </div>
           </div>
-
-          {/* Sidebar */}
           <Sidebar />
         </div>
       </main>
@@ -189,4 +202,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default CategoryPosts; 

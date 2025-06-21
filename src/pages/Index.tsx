@@ -1,99 +1,102 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
+import { getBlogs } from '../lib/api';
+import { PostCardSkeleton } from '../components/SkeletonLoader';
+
+interface Post {
+  _id: string;
+  title: string;
+  excerpt: string;
+  image: string;
+  category: {
+    name: string;
+  };
+  readTime: string;
+  date: string;
+  featured?: boolean;
+}
 
 const Index = () => {
-  const featuredPosts = [
-    {
-      id: 1,
-      title: 'The Complete Guide to Index Fund Investing in 2024',
-      excerpt: 'Learn how to build wealth through low-cost index funds with our comprehensive beginner-friendly guide.',
-      image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=400&fit=crop',
-      category: 'Investing',
-      readTime: '8 min read',
-      date: '2024-01-20',
-      featured: true
-    },
-    {
-      id: 2,
-      title: 'High-Yield Savings Accounts: Best Options for 2024',
-      excerpt: 'Compare the top high-yield savings accounts offering competitive rates and discover how to maximize your savings.',
-      image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&h=400&fit=crop',
-      category: 'Saving',
-      readTime: '6 min read',
-      date: '2024-01-18'
-    },
-    {
-      id: 3,
-      title: 'Credit Card Churning: Risks and Rewards Explained',
-      excerpt: 'Understanding the strategy of credit card churning, its benefits, risks, and whether it\'s right for your financial goals.',
-      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=400&fit=crop',
-      category: 'Credit Cards',
-      readTime: '10 min read',
-      date: '2024-01-15'
-    }
-  ];
+  const [featuredPosts, setFeaturedPosts] = useState<Post[]>([]);
+  const [latestPosts, setLatestPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const latestPosts = [
-    {
-      id: 4,
-      title: '529 Education Savings Plans: Tax Benefits and Investment Options',
-      excerpt: 'Everything you need to know about 529 plans for education savings, including tax advantages and investment strategies.',
-      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=250&fit=crop',
-      category: 'Education',
-      readTime: '7 min read',
-      date: '2024-01-17'
-    },
-    {
-      id: 5,
-      title: 'Debt Snowball vs. Debt Avalanche: Which Method Works Best?',
-      excerpt: 'Compare two popular debt repayment strategies and learn which approach might be more effective for your situation.',
-      image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=250&fit=crop',
-      category: 'Debt Management',
-      readTime: '5 min read',
-      date: '2024-01-16'
-    },
-    {
-      id: 6,
-      title: 'Real Estate Investment Trusts (REITs): A Beginner\'s Guide',
-      excerpt: 'Learn how REITs can provide exposure to real estate markets without the hassle of property management.',
-      image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=250&fit=crop',
-      category: 'Real Estate',
-      readTime: '9 min read',
-      date: '2024-01-14'
-    },
-    {
-      id: 7,
-      title: 'Building Your First Investment Portfolio: Step-by-Step Guide',
-      excerpt: 'A comprehensive guide to creating a diversified investment portfolio tailored to your risk tolerance and goals.',
-      image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=400&h=250&fit=crop',
-      category: 'Investing',
-      readTime: '12 min read',
-      date: '2024-01-13'
-    },
-    {
-      id: 8,
-      title: 'Emergency Fund Calculator: How Much Should You Save?',
-      excerpt: 'Use our guide to determine the right emergency fund size for your situation and learn the best places to keep it.',
-      image: 'https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?w=400&h=250&fit=crop',
-      category: 'Emergency Fund',
-      readTime: '6 min read',
-      date: '2024-01-12'
-    },
-    {
-      id: 9,
-      title: 'Tax-Loss Harvesting: Optimize Your Investment Returns',
-      excerpt: 'Learn how to use tax-loss harvesting to minimize your tax liability and improve your after-tax investment returns.',
-      image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400&h=250&fit=crop',
-      category: 'Tax Strategy',
-      readTime: '8 min read',
-      date: '2024-01-11'
-    }
-  ];
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const posts = await getBlogs();
+        const featured = posts.filter((p: Post) => p.featured).slice(0, 3);
+        const latest = posts.sort((a: Post, b: Post) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 6);
+        setFeaturedPosts(featured.length > 0 ? featured : latest.slice(0,3));
+        setLatestPosts(latest);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch posts.');
+        setLoading(false);
+      }
+    };
 
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <main className="max-w-7xl mx-auto px-4 py-8">
+          <section className="mb-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <div className="relative overflow-hidden rounded-xl shadow-lg bg-white h-[480px] animate-pulse">
+                  <div className="w-full h-full bg-gray-200"></div>
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                  <div className="w-full h-48 bg-gray-200"></div>
+                  <div className="p-4">
+                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                    <div className="h-6 bg-gray-200 rounded w-full mb-3"></div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                  <div className="w-full h-48 bg-gray-200"></div>
+                  <div className="p-4">
+                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                    <div className="h-6 bg-gray-200 rounded w-full mb-3"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <div className="lg:col-span-3">
+              <div className="flex items-center justify-between mb-8">
+                <div className="h-8 w-1/3 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-6 w-1/6 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <PostCardSkeleton key={index} />
+                ))}
+              </div>
+            </div>
+            <Sidebar />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
@@ -103,8 +106,9 @@ const Index = () => {
         <section className="mb-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Featured Post */}
+            {featuredPosts.length > 0 && (
             <div className="lg:col-span-2">
-              <Link to={`/blog/${featuredPosts[0].id}`} className="group block">
+              <Link to={`/blog/${featuredPosts[0]._id}`} className="group block">
                 <div className="relative overflow-hidden rounded-xl shadow-lg">
                   <img 
                     src={featuredPosts[0].image} 
@@ -114,26 +118,27 @@ const Index = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                     <span className="inline-block px-3 py-1 bg-accent text-white text-sm font-medium rounded-full mb-3">
-                      {featuredPosts[0].category}
+                      {featuredPosts[0].category.name}
                     </span>
                     <h2 className="text-2xl lg:text-3xl font-bold mb-2 group-hover:text-accent transition-colors">
                       {featuredPosts[0].title}
                     </h2>
                     <p className="text-gray-200 mb-3">{featuredPosts[0].excerpt}</p>
                     <div className="flex items-center text-sm text-gray-300">
-                      <span>{featuredPosts[0].date}</span>
+                      <span>{new Date(featuredPosts[0].date).toLocaleDateString()}</span>
                       <span className="mx-2">•</span>
-                      <span>{featuredPosts[0].readTime}</span>
+                      <span>{featuredPosts[0].readTime} min read</span>
                     </div>
                   </div>
                 </div>
               </Link>
             </div>
+            )}
 
             {/* Side Featured Posts */}
             <div className="space-y-6">
               {featuredPosts.slice(1).map((post) => (
-                <Link key={post.id} to={`/blog/${post.id}`} className="group block">
+                <Link key={post._id} to={`/blog/${post._id}`} className="group block">
                   <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                     <img 
                       src={post.image} 
@@ -142,16 +147,16 @@ const Index = () => {
                     />
                     <div className="p-4">
                       <span className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
-                        {post.category}
+                        {post.category.name}
                       </span>
                       <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-colors mb-2">
                         {post.title}
                       </h3>
                       <p className="text-gray-600 text-sm mb-3 line-clamp-2">{post.excerpt}</p>
                       <div className="flex items-center text-xs text-gray-500">
-                        <span>{post.date}</span>
+                        <span>{new Date(post.date).toLocaleDateString()}</span>
                         <span className="mx-2">•</span>
-                        <span>{post.readTime}</span>
+                        <span>{post.readTime} min read</span>
                       </div>
                     </div>
                   </div>
@@ -177,8 +182,8 @@ const Index = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {latestPosts.map((post) => (
-                <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  <Link to={`/blog/${post.id}`} className="block">
+                <article key={post._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                  <Link to={`/blog/${post._id}`} className="block">
                     <img 
                       src={post.image} 
                       alt={post.title}
@@ -188,20 +193,20 @@ const Index = () => {
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                       <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded">
-                        {post.category}
+                        {post.category.name}
                       </span>
-                      <span className="text-sm text-gray-500">{post.readTime}</span>
+                      <span className="text-sm text-gray-500">{post.readTime} min read</span>
                     </div>
-                    <Link to={`/blog/${post.id}`}>
+                    <Link to={`/blog/${post._id}`}>
                       <h3 className="text-lg font-semibold text-gray-900 hover:text-primary transition-colors mb-2">
                         {post.title}
                       </h3>
                     </Link>
                     <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">{post.date}</span>
+                      <span className="text-sm text-gray-500">{new Date(post.date).toLocaleDateString()}</span>
                       <Link 
-                        to={`/blog/${post.id}`}
+                        to={`/blog/${post._id}`}
                         className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
                       >
                         Read More →

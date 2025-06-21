@@ -1,102 +1,73 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import { getBlogById, getBlogs } from '../lib/api';
+import { BlogPostSkeleton } from '../components/SkeletonLoader';
+
+interface Post {
+  _id: string;
+  title: string;
+  content: string;
+  image: string;
+  category: {
+    name: string;
+  };
+  readTime: string;
+  date: string;
+  author: {
+    name: string;
+    bio: string;
+    avatar: string;
+  };
+  tags: string[];
+}
 
 const BlogPost = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const [post, setPost] = useState<Post | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Sample blog post data - in real app, this would come from API/CMS
-  const post = {
-    id: parseInt(id || '1'),
-    title: 'The Complete Guide to Index Fund Investing in 2024',
-    content: `
-      <p>Index fund investing has become one of the most popular and effective ways to build long-term wealth. In this comprehensive guide, we'll explore everything you need to know about index funds, from the basics to advanced strategies.</p>
+  useEffect(() => {
+    const fetchPost = async () => {
+      if (!id) return;
+      try {
+        setLoading(true);
+        const postData = await getBlogById(id);
+        setPost(postData);
 
-      <h2>What Are Index Funds?</h2>
-      <p>Index funds are a type of mutual fund or exchange-traded fund (ETF) designed to track the performance of a specific market index, such as the S&P 500. Instead of trying to beat the market, index funds aim to match its performance by holding the same securities in the same proportions as the index they track.</p>
+        // Fetch related posts (e.g., all posts and filter by category)
+        const allPostsData = await getBlogs();
+        const related = allPostsData
+          .filter((p: Post) => p.category.name === postData.category.name && p._id !== postData._id)
+          .slice(0, 3);
+        setRelatedPosts(related);
 
-      <blockquote>
-        <p>"The best investment strategy is to buy a low-cost index fund and hold it for decades." - Warren Buffett</p>
-      </blockquote>
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch blog post.');
+        setLoading(false);
+      }
+    };
 
-      <h2>Why Choose Index Funds?</h2>
-      <ul>
-        <li><strong>Low Costs:</strong> Index funds typically have expense ratios of 0.03% to 0.20%, much lower than actively managed funds.</li>
-        <li><strong>Diversification:</strong> A single index fund can provide exposure to hundreds or thousands of stocks.</li>
-        <li><strong>Consistent Performance:</strong> While they won't beat the market, they also won't underperform by much.</li>
-        <li><strong>Simplicity:</strong> No need to research fund managers or investment strategies.</li>
-      </ul>
+    fetchPost();
+  }, [id]);
 
-      <h2>Getting Started with Index Fund Investing</h2>
-      <p>Starting your index fund investment journey is straightforward. Here's a step-by-step approach:</p>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <BlogPostSkeleton />
+        <Footer />
+      </div>
+    );
+  }
 
-      <ol>
-        <li>Determine your investment goals and risk tolerance</li>
-        <li>Choose a brokerage account</li>
-        <li>Select appropriate index funds</li>
-        <li>Decide on your asset allocation</li>
-        <li>Set up automatic investments</li>
-      </ol>
-
-      <h2>Best Index Funds for Beginners</h2>
-      <p>Here are some popular index fund options for new investors:</p>
-
-      <ul>
-        <li><strong>Total Stock Market Index Funds:</strong> Provide exposure to the entire U.S. stock market</li>
-        <li><strong>S&P 500 Index Funds:</strong> Track the 500 largest U.S. companies</li>
-        <li><strong>International Index Funds:</strong> Add global diversification to your portfolio</li>
-        <li><strong>Bond Index Funds:</strong> Provide stability and income</li>
-      </ul>
-
-      <h2>Common Mistakes to Avoid</h2>
-      <p>While index fund investing is relatively simple, there are some common pitfalls to avoid:</p>
-
-      <ul>
-        <li>Trying to time the market</li>
-        <li>Checking your portfolio too frequently</li>
-        <li>Choosing funds based solely on past performance</li>
-        <li>Ignoring expense ratios</li>
-        <li>Not maintaining proper asset allocation</li>
-      </ul>
-
-      <h2>Conclusion</h2>
-      <p>Index fund investing offers a simple, low-cost way to build wealth over time. By following the principles outlined in this guide and staying disciplined with your investment approach, you can harness the power of compound growth and market returns to achieve your financial goals.</p>
-
-      <p>Remember, investing is a long-term game. Start early, invest regularly, and let time and compound interest work in your favor.</p>
-    `,
-    image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=600&fit=crop',
-    category: 'Investing',
-    readTime: '8 min read',
-    date: '2024-01-20',
-    author: {
-      name: 'Sarah Johnson',
-      bio: 'Sarah is a certified financial planner with over 10 years of experience helping individuals build wealth through smart investing strategies.',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b1e5?w=150&h=150&fit=crop&crop=face'
-    },
-    tags: ['Investing', 'Index Funds', 'ETFs', 'Long-term Investing', 'Portfolio']
-  };
-
-  const relatedPosts = [
-    {
-      id: 7,
-      title: 'Building Your First Investment Portfolio: Step-by-Step Guide',
-      image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=300&h=200&fit=crop',
-      category: 'Investing'
-    },
-    {
-      id: 9,
-      title: 'Tax-Loss Harvesting: Optimize Your Investment Returns',
-      image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=300&h=200&fit=crop',
-      category: 'Tax Strategy'
-    },
-    {
-      id: 6,
-      title: 'Real Estate Investment Trusts (REITs): A Beginner\'s Guide',
-      image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=300&h=200&fit=crop',
-      category: 'Real Estate'
-    }
-  ];
+  if (error || !post) {
+    return <div>{error || 'Post not found.'}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -113,7 +84,7 @@ const BlogPost = () => {
           
           <div className="mb-6">
             <span className="inline-block px-3 py-1 bg-primary text-white text-sm font-medium rounded mb-4">
-              {post.category}
+              {post.category.name}
             </span>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               {post.title}
@@ -121,9 +92,9 @@ const BlogPost = () => {
             <div className="flex items-center text-gray-600 text-sm">
               <span>By {post.author.name}</span>
               <span className="mx-2">•</span>
-              <span>{post.date}</span>
+              <span>{new Date(post.date).toLocaleDateString()}</span>
               <span className="mx-2">•</span>
-              <span>{post.readTime}</span>
+              <span>{post.readTime} min read</span>
             </div>
           </div>
 
@@ -186,8 +157,8 @@ const BlogPost = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedPosts.map((relatedPost) => (
                   <Link 
-                    key={relatedPost.id}
-                    to={`/blog/${relatedPost.id}`}
+                    key={relatedPost._id}
+                    to={`/blog/${relatedPost._id}`}
                     className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                   >
                     <img 
@@ -197,7 +168,7 @@ const BlogPost = () => {
                     />
                     <div className="p-4">
                       <span className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
-                        {relatedPost.category}
+                        {relatedPost.category.name}
                       </span>
                       <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors text-sm line-clamp-2">
                         {relatedPost.title}

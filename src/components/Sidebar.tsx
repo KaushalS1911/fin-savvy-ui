@@ -1,32 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getBlogs, getCategories } from '../lib/api';
+
+interface Post {
+  _id: string;
+  title: string;
+  date: string;
+}
+
+interface Category {
+  _id: string;
+  name: string;
+}
 
 const Sidebar = () => {
-  const recentPosts = [
-    {
-      id: 1,
-      title: 'The Complete Guide to Index Fund Investing',
-      date: '2024-01-20'
-    },
-    {
-      id: 2,
-      title: 'High-Yield Savings Accounts: Best Options',
-      date: '2024-01-18'
-    },
-    {
-      id: 3,
-      title: 'Credit Card Churning: Risks and Rewards',
-      date: '2024-01-15'
-    }
-  ];
+  const [recentPosts, setRecentPosts] = useState<Post[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const categories = [
-    { name: 'Investing', count: 25 },
-    { name: 'Personal Finance', count: 18 },
-    { name: 'Credit Cards', count: 12 },
-    { name: 'Retirement', count: 10 },
-    { name: 'Real Estate', count: 8 }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [postsData, categoriesData] = await Promise.all([
+          getBlogs(),
+          getCategories(),
+        ]);
+        setRecentPosts(postsData.slice(0, 3));
+        setCategories(categoriesData.slice(0, 5));
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch sidebar data.');
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const generateSlug = (name: string) => {
+    return name.toLowerCase().replace(/\s+/g, '-');
+  };
 
   return (
     <aside className="space-y-8">
@@ -60,15 +74,17 @@ const Sidebar = () => {
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-4">Recent Posts</h3>
         <div className="space-y-4">
-          {recentPosts.map((post) => (
-            <div key={post.id} className="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0">
+          {loading && <p>Loading posts...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {!loading && !error && recentPosts.map((post) => (
+            <div key={post._id} className="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0">
               <Link 
-                to={`/blog/${post.id}`}
+                to={`/blog/${post._id}`}
                 className="text-gray-900 hover:text-primary transition-colors font-medium text-sm leading-tight line-clamp-2"
               >
                 {post.title}
               </Link>
-              <p className="text-gray-500 text-xs mt-1">{post.date}</p>
+              <p className="text-gray-500 text-xs mt-1">{new Date(post.date).toLocaleDateString()}</p>
             </div>
           ))}
         </div>
@@ -78,14 +94,15 @@ const Sidebar = () => {
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-4">Categories</h3>
         <div className="space-y-2">
-          {categories.map((category, index) => (
+          {loading && <p>Loading categories...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {!loading && !error && categories.map((category) => (
             <Link
-              key={index}
-              to={`/category/${category.name.toLowerCase().replace(' ', '-')}`}
+              key={category._id}
+              to={`/category/${generateSlug(category.name)}`}
               className="flex items-center justify-between py-2 px-3 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors rounded text-sm"
             >
               <span>{category.name}</span>
-              <span className="text-gray-500 text-xs">({category.count})</span>
             </Link>
           ))}
         </div>
