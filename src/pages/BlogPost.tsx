@@ -108,9 +108,8 @@ const BlogPost = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Article Content */}
           <div className="lg:col-span-3">
-            <div className="prose prose-lg max-w-none">
-              <div dangerouslySetInnerHTML={{ __html: post.content }} />
-            </div>
+            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{__html: post.content}}/>
+
 
             {/* In-article AdSense */}
             <div className="my-8">
@@ -124,13 +123,13 @@ const BlogPost = () => {
               <h3 className="text-lg font-semibold mb-4">Tags</h3>
               <div className="flex flex-wrap gap-2">
                 {post.tags.map((tag) => (
-                  <Link
-                    key={tag}
-                    to={`/tags/${tag.toLowerCase().replace(' ', '-')}`}
-                    className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-primary hover:text-white transition-colors"
-                  >
-                    {tag}
-                  </Link>
+                    <Link
+                        key={tag}
+                        to={`/tags/${tag.toLowerCase().replace(' ', '-')}`}
+                        className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-primary hover:text-white transition-colors"
+                    >
+                      {tag}
+                    </Link>
                 ))}
               </div>
             </div>
@@ -139,10 +138,10 @@ const BlogPost = () => {
             <div className="mt-8 p-6 bg-white rounded-lg border shadow-sm">
               <h3 className="text-lg font-semibold mb-4">About the Author</h3>
               <div className="flex items-start space-x-4">
-                <img 
-                  src={post.author.avatar}
-                  alt={post.author.name}
-                  className="w-16 h-16 rounded-full object-cover"
+                <img
+                    src={post.author.avatar}
+                    alt={post.author.name}
+                    className="w-16 h-16 rounded-full object-cover"
                 />
                 <div>
                   <h4 className="font-semibold text-gray-900">{post.author.name}</h4>
@@ -156,25 +155,26 @@ const BlogPost = () => {
               <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {relatedPosts.map((relatedPost) => (
-                  <Link 
-                    key={relatedPost._id}
-                    to={`/blog/${relatedPost._id}`}
-                    className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                  >
-                    <img 
-                      src={relatedPost.image}
-                      alt={relatedPost.title}
-                      className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="p-4">
-                      <span className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
+                    <Link
+                        key={relatedPost._id}
+                        to={`/blog/${relatedPost._id}`}
+                        className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                    >
+                      <img
+                          src={relatedPost.image}
+                          alt={relatedPost.title}
+                          className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="p-4">
+                      <span
+                          className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
                         {relatedPost.category.name}
                       </span>
-                      <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors text-sm line-clamp-2">
-                        {relatedPost.title}
-                      </h4>
-                    </div>
-                  </Link>
+                        <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors text-sm line-clamp-2">
+                          {relatedPost.title}
+                        </h4>
+                      </div>
+                    </Link>
                 ))}
               </div>
             </div>
