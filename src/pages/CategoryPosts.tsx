@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import { getBlogs, getCategories } from '../lib/api';
 import { PostCardSkeleton } from '../components/SkeletonLoader';
+import { generateSlug } from '../lib/utils';
 
 interface Post {
   _id: string;
@@ -16,6 +17,7 @@ interface Post {
   };
   readTime: string;
   date: string;
+  slug?: string;
   author: {
     name: string;
   };
@@ -74,6 +76,16 @@ const CategoryPosts = () => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
+  // Function to get the URL for a post (slug or generated from title)
+  const getPostUrl = (post: Post) => {
+    if (post.slug) {
+      return `/blog/${post.slug}`;
+    }
+    // Generate slug from title if no slug exists
+    const titleSlug = generateSlug(post.title);
+    return `/blog/${titleSlug}`;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -122,7 +134,7 @@ const CategoryPosts = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {currentPosts.map((post) => (
                 <article key={post._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
-                  <Link to={`/blog/${post._id}`} className="block">
+                  <Link to={getPostUrl(post)} className="block">
                     <div className="relative overflow-hidden">
                       <img 
                         src={post.image} 
@@ -141,7 +153,7 @@ const CategoryPosts = () => {
                       <span className="text-sm text-gray-500">By {post.author.name}</span>
                       <span className="text-sm text-gray-500">{post.readTime} min read</span>
                     </div>
-                    <Link to={`/blog/${post._id}`}>
+                    <Link to={getPostUrl(post)}>
                       <h2 className="text-xl font-semibold text-gray-900 hover:text-primary transition-colors mb-3 line-clamp-2">
                         {post.title}
                       </h2>
@@ -150,7 +162,7 @@ const CategoryPosts = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-500">{new Date(post.date).toLocaleDateString()}</span>
                       <Link 
-                        to={`/blog/${post._id}`}
+                        to={getPostUrl(post)}
                         className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
                       >
                         Read More →

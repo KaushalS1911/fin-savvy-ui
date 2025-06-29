@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getBlogs, getCategories } from '../lib/api';
+import { generateSlug } from '../lib/utils';
 
 interface Post {
   _id: string;
   title: string;
   date: string;
+  slug?: string;
 }
 
 interface Category {
@@ -38,8 +40,18 @@ const Sidebar = () => {
     fetchData();
   }, []);
 
-  const generateSlug = (name: string) => {
+  const generateSlugFromName = (name: string) => {
     return name.toLowerCase().replace(/\s+/g, '-');
+  };
+
+  // Function to get the URL for a post (slug or generated from title)
+  const getPostUrl = (post: Post) => {
+    if (post.slug) {
+      return `/blog/${post.slug}`;
+    }
+    // Generate slug from title if no slug exists
+    const titleSlug = generateSlug(post.title);
+    return `/blog/${titleSlug}`;
   };
 
   return (
@@ -79,7 +91,7 @@ const Sidebar = () => {
           {!loading && !error && recentPosts.map((post) => (
             <div key={post._id} className="border-b border-gray-200 pb-3 last:border-b-0 last:pb-0">
               <Link 
-                to={`/blog/${post._id}`}
+                to={getPostUrl(post)}
                 className="text-gray-900 hover:text-primary transition-colors font-medium text-sm leading-tight line-clamp-2"
               >
                 {post.title}
@@ -99,7 +111,7 @@ const Sidebar = () => {
           {!loading && !error && categories.map((category) => (
             <Link
               key={category._id}
-              to={`/category/${generateSlug(category.name)}`}
+              to={`/category/${generateSlugFromName(category.name)}`}
               className="flex items-center justify-between py-2 px-3 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors rounded text-sm"
             >
               <span>{category.name}</span>

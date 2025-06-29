@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import { getBlogs } from '../lib/api';
 import { PostCardSkeleton } from '../components/SkeletonLoader';
+import { generateSlug } from '../lib/utils';
 
 interface Post {
   _id: string;
@@ -16,6 +17,8 @@ interface Post {
   };
   readTime: string;
   date: string;
+  createdAt?: string;
+  slug?: string;
   featured?: boolean;
 }
 
@@ -42,6 +45,16 @@ const Index = () => {
 
     fetchPosts();
   }, []);
+
+  // Function to get the URL for a post (slug or generated from title)
+  const getPostUrl = (post: Post) => {
+    if (post.slug) {
+      return `/blog/${post.slug}`;
+    }
+    // Generate slug from title if no slug exists
+    const titleSlug = generateSlug(post.title);
+    return `/blog/${titleSlug}`;
+  };
 
   if (loading) {
     return (
@@ -108,7 +121,7 @@ const Index = () => {
             {/* Main Featured Post */}
             {featuredPosts.length > 0 && (
             <div className="lg:col-span-2">
-              <Link to={`/blog/${featuredPosts[0]._id}`} className="group block">
+              <Link to={getPostUrl(featuredPosts[0])} className="group block">
                 <div className="relative overflow-hidden rounded-xl shadow-lg">
                   <img 
                     src={featuredPosts[0].image} 
@@ -138,7 +151,7 @@ const Index = () => {
             {/* Side Featured Posts */}
             <div className="space-y-6">
               {featuredPosts.slice(1).map((post) => (
-                <Link key={post._id} to={`/blog/${post._id}`} className="group block">
+                <Link key={post._id} to={getPostUrl(post)} className="group block">
                   <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                     <img 
                       src={post.image} 
@@ -183,7 +196,7 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {latestPosts.map((post) => (
                 <article key={post._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  <Link to={`/blog/${post._id}`} className="block">
+                  <Link to={getPostUrl(post)} className="block">
                     <img 
                       src={post.image} 
                       alt={post.title}
@@ -195,18 +208,17 @@ const Index = () => {
                       <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded">
                         {post.category.name}
                       </span>
-                      <span className="text-sm text-gray-500">{post.readTime} min read</span>
                     </div>
-                    <Link to={`/blog/${post._id}`}>
+                    <Link to={getPostUrl(post)}>
                       <h3 className="text-lg font-semibold text-gray-900 hover:text-primary transition-colors mb-2">
                         {post.title}
                       </h3>
                     </Link>
                     <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">{new Date(post.date).toLocaleDateString()}</span>
+                      <span className="text-sm text-gray-500">{new Date(post.date).toDateString()}</span>
                       <Link 
-                        to={`/blog/${post._id}`}
+                        to={getPostUrl(post)}
                         className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
                       >
                         Read More →

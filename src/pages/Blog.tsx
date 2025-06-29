@@ -3,8 +3,9 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import { Link } from 'react-router-dom';
-import { getBlogs } from '../lib/api';
+import { getBlogs, testEndpoints } from '../lib/api';
 import { PostCardSkeleton } from '../components/SkeletonLoader';
+import { generateSlug } from '../lib/utils';
 
 interface Post {
   _id: string;
@@ -16,6 +17,7 @@ interface Post {
   };
   readTime: string;
   date: string;
+  slug?: string;
   author: {
     name: string;
   };
@@ -31,6 +33,9 @@ const Blog = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
+        // Test endpoints first
+        await testEndpoints();
+        
         const data = await getBlogs();
         setAllPosts(data);
         setLoading(false);
@@ -49,6 +54,16 @@ const Blog = () => {
   const currentPosts = allPosts.slice(indexOfFirstPost, indexOfLastPost);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+  // Function to get the URL for a post (slug or generated from title)
+  const getPostUrl = (post: Post) => {
+    if (post.slug) {
+      return `/blog/${post.slug}`;
+    }
+    // Generate slug from title if no slug exists
+    const titleSlug = generateSlug(post.title);
+    return `/blog/${titleSlug}`;
+  };
 
   if (loading) {
     return (
@@ -84,22 +99,19 @@ const Blog = () => {
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Financial Blog</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Blog</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover expert insights on investing, personal finance, and wealth building strategies 
-            to help you achieve your financial goals.
+            Discover insights, tips, and strategies to help you make better financial decisions and achieve your money goals.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Blog Posts */}
           <div className="lg:col-span-3">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {currentPosts.map((post) => (
                 <article key={post._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group">
-                  <Link to={`/blog/${post._id}`} className="block">
+                  <Link to={getPostUrl(post)} className="block">
                     <div className="relative overflow-hidden">
                       <img 
                         src={post.image} 
@@ -113,12 +125,13 @@ const Blog = () => {
                       </div>
                     </div>
                   </Link>
+                  
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-sm text-gray-500">By {post.author.name}</span>
                       <span className="text-sm text-gray-500">{post.readTime} min read</span>
                     </div>
-                    <Link to={`/blog/${post._id}`}>
+                    <Link to={getPostUrl(post)}>
                       <h2 className="text-xl font-semibold text-gray-900 hover:text-primary transition-colors mb-3 line-clamp-2">
                         {post.title}
                       </h2>
@@ -127,7 +140,7 @@ const Blog = () => {
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-500">{new Date(post.date).toLocaleDateString()}</span>
                       <Link 
-                        to={`/blog/${post._id}`}
+                        to={getPostUrl(post)}
                         className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
                       >
                         Read More →
@@ -139,47 +152,41 @@ const Blog = () => {
             </div>
 
             {/* Pagination */}
-            <div className="flex justify-center items-center space-x-2 mb-8">
-              <button
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Previous
-              </button>
-              
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+            {totalPages > 1 && (
+              <div className="flex justify-center space-x-2">
                 <button
-                  key={number}
-                  onClick={() => paginate(number)}
-                  className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                    currentPage === number
-                      ? 'bg-primary text-white'
-                      : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                  }`}
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {number}
+                  Previous
                 </button>
-              ))}
-              
-              <button
-                onClick={() => paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
-            </div>
-
-            {/* Mid-content AdSense */}
-            <div className="mb-8">
-              <div className="adsense-slot h-32">
-                {/* Google AdSense Mid-Content Code Here */}
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={`px-4 py-2 text-sm font-medium rounded-md ${
+                      currentPage === number
+                        ? 'bg-primary text-white'
+                        : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {number}
+                  </button>
+                ))}
+                
+                <button
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Sidebar */}
           <Sidebar />
         </div>
       </main>

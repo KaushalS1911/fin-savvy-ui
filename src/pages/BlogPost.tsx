@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { getBlogById, getBlogs } from '../lib/api';
+import { getBlogBySlug, getBlogById, getBlogs } from '../lib/api';
 import { BlogPostSkeleton } from '../components/SkeletonLoader';
+import { isValidObjectId, generateSlug } from '../lib/utils';
 
 interface Post {
   _id: string;
@@ -15,6 +16,8 @@ interface Post {
   };
   readTime: string;
   date: string;
+  createdAt?: string;
+  slug?: string;
   author: {
     name: string;
     bio: string;
@@ -24,7 +27,8 @@ interface Post {
 }
 
 const BlogPost = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const [post, setPost] = useState<Post | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,10 +36,38 @@ const BlogPost = () => {
 
   useEffect(() => {
     const fetchPost = async () => {
-      if (!id) return;
+      if (!slug) return;
+      
+      console.log('Attempting to fetch post with slug/id:', slug);
+      
       try {
         setLoading(true);
-        const postData = await getBlogById(id);
+        
+        let postData;
+        
+        // If it looks like an ObjectId, try ID-based fetching first
+        if (isValidObjectId(slug)) {
+          console.log('Detected ObjectId, trying ID-based fetch...');
+          try {
+            postData = await getBlogById(slug);
+            console.log('Successfully fetched by ID');
+          } catch (idError) {
+            console.log('ID-based fetch failed, trying slug-based...');
+            postData = await getBlogBySlug(slug);
+            console.log('Successfully fetched by slug');
+          }
+        } else {
+          // Try slug-based fetching first
+          console.log('Trying slug-based fetch...');
+          try {
+            postData = await getBlogBySlug(slug);
+            console.log('Successfully fetched by slug');
+          } catch (slugError) {
+            console.log('Slug-based fetch failed');
+            throw slugError;
+          }
+        }
+        
         setPost(postData);
 
         // Fetch related posts (e.g., all posts and filter by category)
@@ -47,13 +79,24 @@ const BlogPost = () => {
 
         setLoading(false);
       } catch (err) {
+        console.error('Failed to fetch blog post:', err);
         setError('Failed to fetch blog post.');
         setLoading(false);
       }
     };
 
     fetchPost();
-  }, [id]);
+  }, [slug, navigate]);
+
+  // Function to get the URL for a post (slug or generated from title)
+  const getPostUrl = (post: Post) => {
+    if (post.slug) {
+      return `/blog/${post.slug}`;
+    }
+    // Generate slug from title if no slug exists
+    const titleSlug = generateSlug(post.title);
+    return `/blog/${titleSlug}`;
+  };
 
   if (loading) {
     return (
@@ -66,7 +109,22 @@ const BlogPost = () => {
   }
 
   if (error || !post) {
-    return <div>{error || 'Post not found.'}</div>;
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Post Not Found</h1>
+          <p className="text-gray-600 mb-6">The blog post you're looking for doesn't exist.</p>
+          <Link 
+            to="/blog" 
+            className="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
+          >
+            Back to Blog
+          </Link>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   return (
@@ -90,11 +148,11 @@ const BlogPost = () => {
               {post.title}
             </h1>
             <div className="flex items-center text-gray-600 text-sm">
-              <span>By {post.author.name}</span>
-              <span className="mx-2">•</span>
-              <span>{new Date(post.date).toLocaleDateString()}</span>
-              <span className="mx-2">•</span>
-              <span>{post.readTime} min read</span>
+              {/*<span>By {post.author.name}</span>*/}
+              {/*<span className="mx-2">•</span>*/}
+              <span>{new Date(post.createdAt || post.date).toDateString()}</span>
+              {/*<span className="mx-2">•</span>*/}
+              {/*<span>{post.readTime} min read</span>*/}
             </div>
           </div>
 
@@ -122,7 +180,7 @@ const BlogPost = () => {
             <div className="mt-8 pt-8 border-t border-gray-200">
               <h3 className="text-lg font-semibold mb-4">Tags</h3>
               <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
+                {post.tags && post.tags.map((tag) => (
                     <Link
                         key={tag}
                         to={`/tags/${tag.toLowerCase().replace(' ', '-')}`}
@@ -157,7 +215,7 @@ const BlogPost = () => {
                 {relatedPosts.map((relatedPost) => (
                     <Link
                         key={relatedPost._id}
-                        to={`/blog/${relatedPost._id}`}
+                        to={getPostUrl(relatedPost)}
                         className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                     >
                       <img
