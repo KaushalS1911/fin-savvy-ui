@@ -138,7 +138,7 @@ const Index = () => {
                     </h2>
                     <p className="text-gray-200 mb-3">{featuredPosts[0].excerpt}</p>
                     <div className="flex items-center text-sm text-gray-300">
-                      <span>{new Date(featuredPosts[0].createdAt).toLocaleDateString()}</span>
+                      <span>{new Date(featuredPosts[0].createdAt).toDateString()}</span>
                     </div>
                   </div>
                 </div>
@@ -165,7 +165,7 @@ const Index = () => {
                       </h3>
                       <p className="text-gray-600 text-sm mb-3 line-clamp-2">{post.excerpt}</p>
                       <div className="flex items-center text-xs text-gray-500">
-                        <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                        <span>{new Date(post.createdAt).toDateString()}</span>
                       </div>
                     </div>
                   </div>
