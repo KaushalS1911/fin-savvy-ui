@@ -13,10 +13,21 @@ import Contact from "./pages/Contact";
 import Search from "./pages/Search";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import TagManager from 'react-gtm-module';
+import {useEffect} from "react";
+
 
 const queryClient = new QueryClient();
 
+useEffect(() => {
+  const tagManagerArgs = {
+    gtmId: 'GTM-T8MC5FCJ'
+  };
+  TagManager.initialize(tagManagerArgs);
+}, []);
+
 const App = () => (
+
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />

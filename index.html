@@ -1,75 +1,101 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-T8MC5FCJ');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>FinanceBlog - Your Trusted Source for Financial Insights</title>
-    <meta name="description" content="Expert financial advice, investment strategies, and money management tips. Learn about investing, budgeting, credit cards, and building wealth with our comprehensive finance blog." />
-    <meta name="keywords" content="finance, investing, money management, budgeting, credit cards, personal finance, wealth building, financial planning" />
-    <meta name="author" content="FinanceBlog Team" />
+    <meta name="description"
+          content="Expert financial advice, investment strategies, and money management tips. Learn about investing, budgeting, credit cards, and building wealth with our comprehensive finance blog."/>
+    <meta name="keywords"
+          content="finance, investing, money management, budgeting, credit cards, personal finance, wealth building, financial planning"/>
+    <meta name="author" content="FinanceBlog Team"/>
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="FinanceBlog - Your Trusted Source for Financial Insights" />
-    <meta property="og:description" content="Expert financial advice, investment strategies, and money management tips for building wealth and achieving financial freedom." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://financeblog.com" />
-    <meta property="og:image" content="https://financeblog.com/og-image.jpg" />
-    <meta property="og:site_name" content="FinanceBlog" />
+    <meta property="og:title" content="FinanceBlog - Your Trusted Source for Financial Insights"/>
+    <meta property="og:description"
+          content="Expert financial advice, investment strategies, and money management tips for building wealth and achieving financial freedom."/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://financeblog.com"/>
+    <meta property="og:image" content="https://financeblog.com/og-image.jpg"/>
+    <meta property="og:site_name" content="FinanceBlog"/>
 
     <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@financeblog" />
-    <meta name="twitter:title" content="FinanceBlog - Financial Insights & Investment Strategies" />
-    <meta name="twitter:description" content="Expert financial advice for building wealth and achieving financial freedom." />
-    <meta name="twitter:image" content="https://financeblog.com/twitter-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:site" content="@financeblog"/>
+    <meta name="twitter:title" content="FinanceBlog - Financial Insights & Investment Strategies"/>
+    <meta name="twitter:description"
+          content="Expert financial advice for building wealth and achieving financial freedom."/>
+    <meta name="twitter:image" content="https://financeblog.com/twitter-image.jpg"/>
 
     <!-- SEO Meta Tags -->
-    <meta name="robots" content="index, follow" />
-    <meta name="googlebot" content="index, follow" />
-    <link rel="canonical" href="https://financeblog.com" />
+    <meta name="robots" content="index, follow"/>
+    <meta name="googlebot" content="index, follow"/>
+    <link rel="canonical" href="https://financeblog.com"/>
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "FinanceBlog",
-      "url": "https://financeblog.com",
-      "description": "Expert financial advice, investment strategies, and money management tips",
-      "publisher": {
-        "@type": "Organization",
-        "name": "FinanceBlog",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://financeblog.com/logo.png"
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "FinanceBlog",
+            "url": "https://financeblog.com",
+            "description": "Expert financial advice, investment strategies, and money management tips",
+            "publisher": {
+                "@type": "Organization",
+                "name": "FinanceBlog",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://financeblog.com/logo.png"
+                }
+            },
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://financeblog.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
         }
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://financeblog.com/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
     </script>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
 
     <!-- Preconnect to Google Fonts for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <!-- Google Analytics - Replace with your tracking ID -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"></script> -->
-    
+
     <!-- Google AdSense - Replace with your AdSense code -->
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX" crossorigin="anonymous"></script> -->
-  </head>
+</head>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8MC5FCJ"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="root"></div>
+<script type="module" src="/src/main.tsx"></script>
+</body>
 </html>

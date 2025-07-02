@@ -1,64 +1,28 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Search as SearchIcon } from 'lucide-react';
+import {getBlogs} from "@/lib/api.ts";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [allPosts, setAllPosts] = useState<any[]>([]);
 
-  // Sample search data - in real app, this would come from API
-  const allPosts = [
-    {
-      id: 1,
-      title: 'The Complete Guide to Index Fund Investing in 2024',
-      excerpt: 'Learn how to build wealth through low-cost index funds with our comprehensive beginner-friendly guide.',
-      image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=250&fit=crop',
-      category: 'Investing',
-      date: '2024-01-20',
-      tags: ['investing', 'index funds', 'etfs', 'portfolio']
-    },
-    {
-      id: 2,
-      title: 'High-Yield Savings Accounts: Best Options for 2024',
-      excerpt: 'Compare the top high-yield savings accounts offering competitive rates and discover how to maximize your savings.',
-      image: 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=400&h=250&fit=crop',
-      category: 'Saving',
-      date: '2024-01-18',
-      tags: ['savings', 'banking', 'interest rates', 'emergency fund']
-    },
-    {
-      id: 3,
-      title: 'Credit Card Churning: Risks and Rewards Explained',
-      excerpt: 'Understanding the strategy of credit card churning, its benefits, risks, and whether it\'s right for your financial goals.',
-      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=250&fit=crop',
-      category: 'Credit Cards',
-      date: '2024-01-15',
-      tags: ['credit cards', 'rewards', 'churning', 'credit score']
-    },
-    {
-      id: 4,
-      title: 'Emergency Fund Calculator: How Much Should You Save?',
-      excerpt: 'Use our guide to determine the right emergency fund size for your situation and learn the best places to keep it.',
-      image: 'https://images.unsplash.com/photo-1633158829585-23ba8f7c8caf?w=400&h=250&fit=crop',
-      category: 'Emergency Fund',
-      date: '2024-01-12',
-      tags: ['emergency fund', 'savings', 'financial planning', 'budgeting']
-    },
-    {
-      id: 5,
-      title: 'Real Estate Investment Trusts (REITs): A Beginner\'s Guide',
-      excerpt: 'Learn how REITs can provide exposure to real estate markets without the hassle of property management.',
-      image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=250&fit=crop',
-      category: 'Real Estate',
-      date: '2024-01-14',
-      tags: ['reits', 'real estate', 'investing', 'dividends']
-    }
-  ];
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const data = await getBlogs();
+        setAllPosts(data);
+      } catch (err) {
+        setAllPosts([]);
+      }
+    };
+    fetchBlogs();
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +36,7 @@ const Search = () => {
       const results = allPosts.filter(post => 
         post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.category.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
       );
       
@@ -214,7 +178,7 @@ const Search = () => {
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-3">
                         <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded">
-                          {post.category}
+                          {post.category.name}
                         </span>
                         <span className="text-sm text-gray-500">{post.date}</span>
                       </div>
