@@ -5,13 +5,6 @@ const Footer = () => {
   return (
     <footer className="bg-primary text-white">
       {/* Pre-footer AdSense */}
-      <div className="bg-gray-100 py-4">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="adsense-slot h-24">
-            {/* Google AdSense Footer Code Here */}
-          </div>
-        </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -28,20 +21,20 @@ const Footer = () => {
               Empowering you to make informed financial decisions.
             </p>
             {/* Social Media Links */}
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                <span className="sr-only">Facebook</span>
-                <div className="w-6 h-6 bg-gray-300 rounded"></div>
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                <span className="sr-only">Twitter</span>
-                <div className="w-6 h-6 bg-gray-300 rounded"></div>
-              </a>
-              <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                <span className="sr-only">LinkedIn</span>
-                <div className="w-6 h-6 bg-gray-300 rounded"></div>
-              </a>
-            </div>
+            {/*<div className="flex space-x-4">*/}
+            {/*  <a href="#" className="text-gray-300 hover:text-white transition-colors">*/}
+            {/*    <span className="sr-only">Facebook</span>*/}
+            {/*    <div className="w-6 h-6 bg-gray-300 rounded"></div>*/}
+            {/*  </a>*/}
+            {/*  <a href="#" className="text-gray-300 hover:text-white transition-colors">*/}
+            {/*    <span className="sr-only">Twitter</span>*/}
+            {/*    <div className="w-6 h-6 bg-gray-300 rounded"></div>*/}
+            {/*  </a>*/}
+            {/*  <a href="#" className="text-gray-300 hover:text-white transition-colors">*/}
+            {/*    <span className="sr-only">LinkedIn</span>*/}
+            {/*    <div className="w-6 h-6 bg-gray-300 rounded"></div>*/}
+            {/*  </a>*/}
+            {/*</div>*/}
           </div>
 
           {/* Quick Links */}

@@ -92,8 +92,8 @@
     @apply bg-gray-100 border-2 border-dashed border-gray-300 p-4 text-center text-gray-500 rounded-lg;
   }
   
-  .adsense-slot::before {
-    content: "AdSense Slot";
-    @apply text-sm font-medium;
-  }
+  /*.adsense-slot::before {*/
+  /*  content: "AdSense Slot";*/
+  /*  @apply text-sm font-medium;*/
+  /*}*/
 }

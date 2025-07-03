@@ -115,7 +115,6 @@ const Index = () => {
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Hero Section with Featured Posts */}
         <section className="mb-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Featured Post */}
@@ -225,12 +224,6 @@ const Index = () => {
               ))}
             </div>
 
-            {/* In-content AdSense */}
-            <div className="mb-8">
-              <div className="adsense-slot h-32">
-                {/* Google AdSense In-Content Code Here */}
-              </div>
-            </div>
 
             {/* Load More Button */}
             <div className="text-center">

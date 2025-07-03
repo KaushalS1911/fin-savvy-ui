@@ -15,6 +15,7 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import TagManager from 'react-gtm-module';
 import {useEffect} from "react";
+import CookieConsent from "./components/CookieConsent";
 
 
 const queryClient = new QueryClient();
@@ -23,33 +24,35 @@ const queryClient = new QueryClient();
 const App = () => {
     useEffect(() => {
         const tagManagerArgs = {
-            gtmId: 'GTM-T8MC5FCJ'
+            gtmId: import.meta.env.VITE_GTAG_ID,
         };
         TagManager.initialize(tagManagerArgs);
     }, []);
     return (
-
-        <QueryClientProvider client={queryClient}>
-            <TooltipProvider>
-                <Toaster/>
-                <Sonner/>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<Index/>}/>
-                        <Route path="/blog" element={<Blog/>}/>
-                        <Route path="/blog/:slug" element={<BlogPost/>}/>
-                        <Route path="/categories" element={<Categories/>}/>
-                        <Route path="/category/:categorySlug" element={<CategoryPosts/>}/>
-                        <Route path="/about" element={<About/>}/>
-                        <Route path="/contact" element={<Contact/>}/>
-                        <Route path="/search" element={<Search/>}/>
-                        <Route path="/admin" element={<Admin/>}/>
-                        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                        <Route path="*" element={<NotFound/>}/>
-                    </Routes>
-                </BrowserRouter>
-            </TooltipProvider>
-        </QueryClientProvider>
+        <>
+            <CookieConsent />
+            <QueryClientProvider client={queryClient}>
+                <TooltipProvider>
+                    <Toaster/>
+                    <Sonner/>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/" element={<Index/>}/>
+                            <Route path="/blog" element={<Blog/>}/>
+                            <Route path="/blog/:slug" element={<BlogPost/>}/>
+                            <Route path="/categories" element={<Categories/>}/>
+                            <Route path="/category/:categorySlug" element={<CategoryPosts/>}/>
+                            <Route path="/about" element={<About/>}/>
+                            <Route path="/contact" element={<Contact/>}/>
+                            <Route path="/search" element={<Search/>}/>
+                            <Route path="/admin" element={<Admin/>}/>
+                            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                            <Route path="*" element={<NotFound/>}/>
+                        </Routes>
+                    </BrowserRouter>
+                </TooltipProvider>
+            </QueryClientProvider>
+        </>
     )
 };
 

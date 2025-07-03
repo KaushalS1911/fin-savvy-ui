@@ -131,147 +131,137 @@ const BlogPost = () => {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      <article className="max-w-4xl mx-auto px-4 py-8">
-        {/* Article Header */}
-        <header className="mb-8">
-          <div className="mb-4">
-            <Link to="/blog" className="text-primary hover:text-primary/80 text-sm font-medium">
-              ← Back to Blog
-            </Link>
-          </div>
-          
-          <div className="mb-6">
-            <span className="inline-block px-3 py-1 bg-primary text-white text-sm font-medium rounded mb-4">
-              {post.category.name}
-            </span>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {post.title}
-            </h1>
-            <div className="flex items-center text-gray-600 text-sm">
-              {/*<span>By {post.author.name}</span>*/}
-              {/*<span className="mx-2">•</span>*/}
-              <span>{new Date(post.createdAt || post.createdAt).toDateString()}</span>
-              {/*<span className="mx-2">•</span>*/}
-              {/*<span>{post.readTime} min read</span>*/}
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        <article className="max-w-4xl mx-auto px-4 py-8">
+          {/* Article Header */}
+          <header className="mb-8">
+            <div className="mb-4">
+              <Link to="/blog" className="text-primary hover:text-primary/80 text-sm font-medium">
+                ← Back to Blog
+              </Link>
             </div>
-          </div>
-
-          <img 
-            src={post.image} 
-            alt={post.title}
-            className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
-          />
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Article Content */}
-          <div className="lg:col-span-3">
-            <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{__html: post.content}}/>
-
-
-            {/* In-article AdSense */}
-            <div className="my-8">
-              <div className="adsense-slot h-32">
-                {/* Google AdSense In-Article Code Here */}
+            
+            <div className="mb-6">
+              <span className="inline-block px-3 py-1 bg-primary text-white text-sm font-medium rounded mb-4">
+                {post.category.name}
+              </span>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                {post.title}
+              </h1>
+              <div className="flex items-center text-gray-600 text-sm">
+                {/*<span>By {post.author.name}</span>*/}
+                {/*<span className="mx-2">•</span>*/}
+                <span>{new Date(post.createdAt || post.createdAt).toDateString()}</span>
+                {/*<span className="mx-2">•</span>*/}
+                {/*<span>{post.readTime} min read</span>*/}
               </div>
             </div>
 
-            {/* Tags */}
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <h3 className="text-lg font-semibold mb-4">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {post.tags && post.tags.map((tag) => (
-                    <Link
-                        key={tag}
-                        to={`/tags/${tag.toLowerCase().replace(' ', '-')}`}
-                        className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-primary hover:text-white transition-colors"
-                    >
-                      {tag}
-                    </Link>
-                ))}
-              </div>
-            </div>
+            <img 
+              src={post.image} 
+              alt={post.title}
+              className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
+            />
+          </header>
 
-            {/* Author Bio */}
-            <div className="mt-8 p-6 bg-white rounded-lg border shadow-sm">
-              <h3 className="text-lg font-semibold mb-4">About the Author</h3>
-              <div className="flex items-start space-x-4">
-                <img
-                    src={post.author.avatar}
-                    alt={post.author.name}
-                    className="w-16 h-16 rounded-full object-cover"
-                />
-                <div>
-                  <h4 className="font-semibold text-gray-900">{post.author.name}</h4>
-                  <p className="text-gray-600 mt-2">{post.author.bio}</p>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Article Content */}
+            <div className="lg:col-span-3">
+              <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{__html: post.content}}/>
+
+              {/* Tags */}
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <h3 className="text-lg font-semibold mb-4">Tags</h3>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags && post.tags.map((tag) => (
+                      <Link
+                          key={tag}
+                          to={`/tags/${tag.toLowerCase().replace(' ', '-')}`}
+                          className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-primary hover:text-white transition-colors"
+                      >
+                        {tag}
+                      </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Author Bio */}
+              <div className="mt-8 p-6 bg-white rounded-lg border shadow-sm">
+                <h3 className="text-lg font-semibold mb-4">About the Author</h3>
+                <div className="flex items-start space-x-4">
+                  <img
+                      src={post.author.avatar}
+                      alt={post.author.name}
+                      className="w-16 h-16 rounded-full object-cover"
+                  />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">{post.author.name}</h4>
+                    <p className="text-gray-600 mt-2">{post.author.bio}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Related Articles */}
+              <div className="mt-12">
+                <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {relatedPosts.map((relatedPost) => (
+                      <Link
+                          key={relatedPost._id}
+                          to={getPostUrl(relatedPost)}
+                          className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                      >
+                        <img
+                            src={relatedPost.image}
+                            alt={relatedPost.title}
+                            className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="p-4">
+                        <span
+                            className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
+                          {relatedPost.category.name}
+                        </span>
+                          <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors text-sm line-clamp-2">
+                            {relatedPost.title}
+                          </h4>
+                        </div>
+                      </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Comments Section */}
+              <div className="mt-12 p-6 bg-white rounded-lg border shadow-sm">
+                <h3 className="text-lg font-semibold mb-4">Comments</h3>
+                <div className="text-center py-8 text-gray-500">
+                  <p>Comments section will be integrated with Disqus or similar service.</p>
+                  <p className="text-sm mt-2">{/* Disqus Comments Code Here */}</p>
                 </div>
               </div>
             </div>
 
-            {/* Related Articles */}
-            <div className="mt-12">
-              <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relatedPosts.map((relatedPost) => (
-                    <Link
-                        key={relatedPost._id}
-                        to={getPostUrl(relatedPost)}
-                        className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                    >
-                      <img
-                          src={relatedPost.image}
-                          alt={relatedPost.title}
-                          className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="p-4">
-                      <span
-                          className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
-                        {relatedPost.category.name}
-                      </span>
-                        <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors text-sm line-clamp-2">
-                          {relatedPost.title}
-                        </h4>
-                      </div>
-                    </Link>
-                ))}
-              </div>
-            </div>
+            {/* Sidebar */}
+            <aside className="lg:col-span-1">
+              {/* Sticky AdSense */}
+              <div className="sticky top-8 space-y-6">
+                {/* Share Buttons */}
+                <div className="bg-white p-4 rounded-lg border shadow-sm">
+                  <h4 className="font-semibold mb-3">Share this article</h4>
+                  <div className="flex space-x-2">
+                    <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors">
+                      Facebook
+                    </button>
+                    <button className="flex-1 bg-blue-400 text-white py-2 px-3 rounded text-sm hover:bg-blue-500 transition-colors">
+                      Twitter
+                    </button>
 
-            {/* Comments Section */}
-            <div className="mt-12 p-6 bg-white rounded-lg border shadow-sm">
-              <h3 className="text-lg font-semibold mb-4">Comments</h3>
-              <div className="text-center py-8 text-gray-500">
-                <p>Comments section will be integrated with Disqus or similar service.</p>
-                <p className="text-sm mt-2">{/* Disqus Comments Code Here */}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          <aside className="lg:col-span-1">
-            {/* Sticky AdSense */}
-            <div className="sticky top-8 space-y-6">
-              <div className="adsense-slot h-64">
-                {/* Google AdSense Sticky Sidebar Code Here */}
-              </div>
-              
-              {/* Share Buttons */}
-              <div className="bg-white p-4 rounded-lg border shadow-sm">
-                <h4 className="font-semibold mb-3">Share this article</h4>
-                <div className="flex space-x-2">
-                  <button className="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm hover:bg-blue-700 transition-colors">
-                    Facebook
-                  </button>
-                  <button className="flex-1 bg-blue-400 text-white py-2 px-3 rounded text-sm hover:bg-blue-500 transition-colors">
-                    Twitter
-                  </button>
-
+                  </div>
                 </div>
               </div>
-            </div>
-          </aside>
-        </div>
-      </article>
+            </aside>
+          </div>
+        </article>
+      </main>
 
       <Footer />
     </div>

@@ -56,11 +56,6 @@ const Sidebar = () => {
 
   return (
     <aside className="space-y-8">
-      {/* AdSense Slot */}
-      <div className="adsense-slot h-64">
-        {/* Google AdSense Sidebar Code Here */}
-      </div>
-
       {/* Newsletter Signup */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-4">Subscribe to Our Newsletter</h3>
@@ -118,11 +113,6 @@ const Sidebar = () => {
             </Link>
           ))}
         </div>
-      </div>
-
-      {/* Another AdSense Slot */}
-      <div className="adsense-slot h-64">
-        {/* Google AdSense Sidebar Bottom Code Here */}
       </div>
     </aside>
   );

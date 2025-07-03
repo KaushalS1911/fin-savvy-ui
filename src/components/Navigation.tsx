@@ -91,15 +91,6 @@ const Navigation = () => {
           </div>
         )}
       </div>
-
-      {/* Top AdSense Slot */}
-      <div className="bg-gray-50 py-2">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="adsense-slot h-20">
-            {/* Google AdSense Banner Code Here */}
-          </div>
-        </div>
-      </div>
     </nav>
   );
 };
