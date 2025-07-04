@@ -127,10 +127,6 @@ const Blog = () => {
                   </Link>
                   
                   <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm text-gray-500">By {post.author.name}</span>
-                      <span className="text-sm text-gray-500">{post.readTime} min read</span>
-                    </div>
                     <Link to={getPostUrl(post)}>
                       <h2 className="text-xl font-semibold text-gray-900 hover:text-primary transition-colors mb-3 line-clamp-2">
                         {post.title}
