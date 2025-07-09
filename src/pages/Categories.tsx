@@ -96,7 +96,7 @@ const Categories = () => {
             >
               <div className="relative">
                 <img 
-                  src={`https://source.unsplash.com/400x250/?${category.name}`}
+                  src={category.image}
                   alt={category.name}
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
