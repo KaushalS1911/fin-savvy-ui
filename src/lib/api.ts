@@ -1,16 +1,13 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://blog-be-gxxu.onrender.com/api';
+const API_BASE_URL = 'https://be-blog-how-to-earn.onrender.com/api';
 
-// Test function to check available endpoints
 export const testEndpoints = async () => {
   console.log('Testing API endpoints...');
   
   try {
-    // Test blogs endpoint
     const blogsResponse = await axios.get(`${API_BASE_URL}/blogs`);
-    console.log('✅ /blogs endpoint works:', blogsResponse.data.length, 'blogs found');
-    
+
     if (blogsResponse.data.length > 0) {
       const firstBlog = blogsResponse.data[0];
       console.log('First blog:', {
@@ -41,13 +38,11 @@ export const testEndpoints = async () => {
     // Test categories endpoint
     try {
       const categoriesResponse = await axios.get(`${API_BASE_URL}/categories`);
-      console.log('✅ /categories endpoint works:', categoriesResponse.data.length, 'categories found');
     } catch (error) {
-      console.log('❌ /categories endpoint failed:', error.response?.status);
     }
     
   } catch (error) {
-    console.error('❌ API base connection failed:', error.response?.status, error.message);
+    throw error;
   }
 };
 
@@ -56,28 +51,20 @@ export const getBlogs = async () => {
     const response = await axios.get(`${API_BASE_URL}/blogs`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching blogs:', error);
     throw error;
   }
 };
 
 export const getBlogBySlug = async (slug: string) => {
   try {
-    // First try the slug endpoint
     try {
       const response = await axios.get(`${API_BASE_URL}/blogs/slug/${slug}`);
-      console.log('Successfully fetched by slug:', slug);
       return response.data;
     } catch (slugError) {
-      console.log('Slug endpoint failed, trying alternative approaches...');
-      
-      // If slug endpoint doesn't exist, try to find the post by title
+
       const allBlogs = await getBlogs();
       const post = allBlogs.find((blog: any) => {
-        // Check if the blog has a slug field that matches
         if (blog.slug === slug) return true;
-        
-        // Generate slug from title and compare
         const titleSlug = blog.title
           .toLowerCase()
           .trim()
@@ -90,7 +77,6 @@ export const getBlogBySlug = async (slug: string) => {
       });
       
       if (post) {
-        console.log('Found post by title slug:', post.title);
         return post;
       }
       
@@ -107,7 +93,6 @@ export const getBlogById = async (id: string) => {
     const response = await axios.get(`${API_BASE_URL}/blogs/${id}`);
     return response.data;
   } catch (error) {
-    console.error(`Error fetching blog with id ${id}:`, error);
     throw error;
   }
 };
@@ -117,7 +102,6 @@ export const getCategories = async () => {
     const response = await axios.get(`${API_BASE_URL}/categories`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching categories:', error);
     throw error;
   }
 }; 
