@@ -90,13 +90,6 @@ const Search = () => {
           </form>
         </div>
 
-        {/* Top AdSense */}
-        <div className="mb-8">
-          <div className="adsense-slot h-24">
-            {/* Google AdSense Search Top Code Here */}
-          </div>
-        </div>
-
         {/* Popular Searches */}
         {!hasSearched && (
           <section className="mb-12">

@@ -79,13 +79,6 @@ const Categories = () => {
           </div>
         </div>
 
-        {/* Top AdSense */}
-        <div className="mb-8">
-          <div className="adsense-slot h-24">
-            {/* Google AdSense Categories Top Code Here */}
-          </div>
-        </div>
-
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {categories.map((category) => (
@@ -118,13 +111,6 @@ const Categories = () => {
               </div>
             </Link>
           ))}
-        </div>
-
-        {/* Mid-content AdSense */}
-        <div className="mb-12">
-          <div className="adsense-slot h-32">
-            {/* Google AdSense Categories Middle Code Here */}
-          </div>
         </div>
 
         {/* Popular Categories */}
