@@ -134,7 +134,7 @@ const Blog = () => {
                     </Link>
                     <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">{new Date(post.date).toLocaleDateString()}</span>
+                      <span className="text-sm text-gray-500">{new Date(post.createdAt).toDateString()}</span>
                       <Link 
                         to={getPostUrl(post)}
                         className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"

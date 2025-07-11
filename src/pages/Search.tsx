@@ -199,15 +199,6 @@ const Search = () => {
           </section>
         )}
 
-        {/* Mid-content AdSense */}
-        {hasSearched && searchResults.length > 0 && (
-          <div className="my-12">
-            <div className="adsense-slot h-32">
-              {/* Google AdSense Search Results Code Here */}
-            </div>
-          </div>
-        )}
-
         {/* Search Tips */}
         {!hasSearched && (
           <section className="bg-white rounded-lg p-8 border shadow-sm">

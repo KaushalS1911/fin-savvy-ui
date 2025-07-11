@@ -2,6 +2,10 @@
 import React from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import sarah from '../../public/images/ChatGPT Image Jul 11, 2025, 03_22_42 PM.png'
+import michel from '../../public/images/photo-1472099645785-5658abf4ff4e.png'
+import emily from '../../public/images/photo-1438761681033-6461ffad8d80.png'
+
 
 const About = () => {
   const teamMembers = [
@@ -9,21 +13,21 @@ const About = () => {
       name: 'Sarah Johnson',
       role: 'Editor-in-Chief & Financial Planner',
       bio: 'CFP with 10+ years of experience helping individuals build wealth through smart investing strategies.',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b1e5?w=300&h=300&fit=crop&crop=face',
+      image: sarah,
       credentials: 'CFP®, CFA'
     },
     {
       name: 'Michael Chen',
       role: 'Investment Analyst',
       bio: 'Former Wall Street analyst specializing in market research and portfolio optimization strategies.',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
+      image: michel,
       credentials: 'CFA, MBA'
     },
     {
       name: 'Emily Davis',
       role: 'Personal Finance Expert',
       bio: 'Passionate about helping families achieve financial independence through budgeting and smart saving.',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face',
+      image: emily,
       credentials: 'AFC®, MS Finance'
     }
   ];
@@ -55,13 +59,6 @@ const About = () => {
             className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
           />
         </section>
-
-        {/* Top AdSense */}
-        <div className="mb-12">
-          <div className="adsense-slot h-24">
-            {/* Google AdSense About Top Code Here */}
-          </div>
-        </div>
 
         {/* Mission Section */}
         <section className="mb-16">
@@ -139,13 +136,7 @@ const About = () => {
             ))}
           </div>
         </section>
-
-        {/* Mid-content AdSense */}
-        <div className="mb-12">
-          <div className="adsense-slot h-32">
-            {/* Google AdSense About Middle Code Here */}
-          </div>
-        </div>
+7
 
         {/* Values Section */}
         <section className="mb-16">
