@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import TagManager from 'react-gtm-module';
 import {useEffect} from "react";
 import CookieConsent from "./components/CookieConsent";
+import TodayPosts from "./pages/TodayPosts";
 
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => {
                             <Route path="/blog/:slug" element={<BlogPost/>}/>
                             <Route path="/categories" element={<Categories/>}/>
                             <Route path="/category/:categorySlug" element={<CategoryPosts/>}/>
+                            <Route path="/today" element={<TodayPosts/>}/>
                             <Route path="/about" element={<About/>}/>
                             <Route path="/contact" element={<Contact/>}/>
                             <Route path="/search" element={<Search/>}/>

@@ -57,12 +57,9 @@ const Blog = () => {
 
   // Function to get the URL for a post (slug or generated from title)
   const getPostUrl = (post: Post) => {
-    if (post.slug) {
-      return `/blog/${post.slug}`;
-    }
-    // Generate slug from title if no slug exists
-    const titleSlug = generateSlug(post.title);
-    return `/blog/${titleSlug}`;
+    if (post.slug) return `/blog/${post.slug}`;
+    if (post.title) return `/blog/${generateSlug(post.title)}`;
+    return `/blog/${post._id}`;
   };
 
   if (loading) {

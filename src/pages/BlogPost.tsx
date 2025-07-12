@@ -90,12 +90,7 @@ const BlogPost = () => {
 
   // Function to get the URL for a post (slug or generated from title)
   const getPostUrl = (post: Post) => {
-    if (post.slug) {
-      return `/blog/${post.slug}`;
-    }
-    // Generate slug from title if no slug exists
-    const titleSlug = generateSlug(post.title);
-    return `/blog/${titleSlug}`;
+    return post.slug ? `/blog/${post.slug}` : `/blog/${post._id}`;
   };
 
   if (loading) {
@@ -204,30 +199,34 @@ const BlogPost = () => {
               {/* Related Articles */}
               <div className="mt-12">
                 <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {relatedPosts.map((relatedPost) => (
-                      <Link
-                          key={relatedPost._id}
-                          to={getPostUrl(relatedPost)}
-                          className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                      >
-                        <img
-                            src={relatedPost.image}
-                            alt={relatedPost.title}
-                            className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <div className="p-4">
-                        <span
-                            className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
-                          {relatedPost.category.name}
-                        </span>
-                          <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors text-sm line-clamp-2">
-                            {relatedPost.title}
-                          </h4>
-                        </div>
-                      </Link>
-                  ))}
-                </div>
+                {relatedPosts.length === 0 ? (
+                  <div className="text-gray-500 text-center py-8">No related articles found.</div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {relatedPosts.map((relatedPost) => (
+                        <Link
+                            key={relatedPost._id}
+                            to={getPostUrl(relatedPost)}
+                            className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                        >
+                          <img
+                              src={relatedPost.image}
+                              alt={relatedPost.title}
+                              className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="p-4">
+                          <span
+                              className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
+                            {relatedPost.category.name}
+                          </span>
+                            <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors text-sm line-clamp-2">
+                              {relatedPost.title}
+                            </h4>
+                          </div>
+                        </Link>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Comments Section */}
