@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://finance-blogs-87niy.ondigitalocean.app';
+const API_BASE_URL = 'https://finance-blogs-87niy.ondigitalocean.app/api';
 
 export const testEndpoints = async () => {
   console.log('Testing API endpoints...');
