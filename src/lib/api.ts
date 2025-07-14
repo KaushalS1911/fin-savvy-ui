@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://be-blog-how-to-earn.onrender.com/api';
+const API_BASE_URL = 'https://finance-blogs-87niy.ondigitalocean.app';
 
 export const testEndpoints = async () => {
   console.log('Testing API endpoints...');

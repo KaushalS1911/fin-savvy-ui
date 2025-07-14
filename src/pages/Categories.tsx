@@ -2,33 +2,59 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import { getCategories } from '../lib/api';
+import { getCategories, getBlogs } from '../lib/api';
 import { CategoryCardSkeleton } from '../components/SkeletonLoader';
 
 interface Category {
   _id: string;
   name: string;
   description: string;
+  image?: string;
+}
+
+interface Post {
+  _id: string;
+  title: string;
+  category: {
+    name: string;
+  };
 }
 
 const Categories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [categoryCounts, setCategoryCounts] = useState<{ [key: string]: number }>({});
+  const [popularCategories, setPopularCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getCategories();
-        setCategories(data);
+        const [categoriesData, postsData] = await Promise.all([
+          getCategories(),
+          getBlogs(),
+        ]);
+        setCategories(categoriesData);
+        // Count posts per category
+        const counts: { [key: string]: number } = {};
+        postsData.forEach((post: Post) => {
+          if (post.category && post.category.name) {
+            counts[post.category.name] = (counts[post.category.name] || 0) + 1;
+          }
+        });
+        setCategoryCounts(counts);
+        // Find top 3 categories by post count
+        const sorted = [...categoriesData]
+          .sort((a, b) => (counts[b.name] || 0) - (counts[a.name] || 0))
+          .slice(0, 3);
+        setPopularCategories(sorted);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch categories.');
+        setError('Failed to fetch categories or posts.');
         setLoading(false);
       }
     };
-
-    fetchCategories();
+    fetchData();
   }, []);
 
   const generateSlug = (name: string) => {
@@ -117,27 +143,26 @@ const Categories = () => {
         <section className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Most Popular Categories</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {categories
-              .slice(0, 3)
-              .map((category) => (
-                <Link
-                  key={category._id}
-                  to={`/category/${generateSlug(category.name)}`}
-                  className="group flex items-center p-4 bg-white rounded-lg border hover:border-primary transition-colors"
-                >
-                  <div className={`w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mr-4`}>
-                    <span className="text-gray-500 font-bold text-lg">
-                      {category.name.charAt(0)}
-                    </span>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">
-                      {category.name}
-                    </h3>
-                  </div>
-                  <span className="text-gray-400 group-hover:text-primary transition-colors">→</span>
-                </Link>
-              ))}
+            {popularCategories.map((category) => (
+              <Link
+                key={category._id}
+                to={`/category/${generateSlug(category.name)}`}
+                className="group flex items-center p-4 bg-white rounded-lg border hover:border-primary transition-colors"
+              >
+                <div className={`w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mr-4`}>
+                  <span className="text-gray-500 font-bold text-lg">
+                    {category.name.charAt(0)}
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">
+                    {category.name}
+                  </h3>
+                  <span className="text-xs text-gray-400">{categoryCounts[category.name] || 0} posts</span>
+                </div>
+                <span className="text-gray-400 group-hover:text-primary transition-colors">→</span>
+              </Link>
+            ))}
           </div>
         </section>
 

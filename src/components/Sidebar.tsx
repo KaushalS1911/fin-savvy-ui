@@ -20,6 +20,7 @@ const Sidebar = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [categoryCounts, setCategoryCounts] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +31,14 @@ const Sidebar = () => {
         ]);
         setRecentPosts(postsData.slice(0, 3));
         setCategories(categoriesData.slice(0, 5));
+        // Count posts per category
+        const counts: { [key: string]: number } = {};
+        postsData.forEach((post) => {
+          if (post.category && post.category.name) {
+            counts[post.category.name] = (counts[post.category.name] || 0) + 1;
+          }
+        });
+        setCategoryCounts(counts);
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch sidebar data.');
@@ -96,6 +105,25 @@ const Sidebar = () => {
 
       {/* Categories */}
       <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Most Popular Categories</h3>
+        <div className="space-y-2 mb-6">
+          {loading && <p>Loading popular categories...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {!loading && !error &&
+            Object.entries(categoryCounts)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 3)
+              .map(([name, count]) => (
+                <Link
+                  key={name}
+                  to={`/category/${generateSlugFromName(name)}`}
+                  className="flex items-center justify-between py-2 px-3 text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors rounded text-sm font-medium"
+                >
+                  <span>{name}</span>
+                  <span className="ml-2 text-xs text-gray-400">{count} posts</span>
+                </Link>
+              ))}
+        </div>
         <h3 className="text-xl font-semibold text-gray-900 mb-4">Categories</h3>
         <div className="space-y-2">
           {loading && <p>Loading categories...</p>}
