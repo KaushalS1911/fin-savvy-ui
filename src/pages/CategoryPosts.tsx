@@ -80,12 +80,9 @@ const CategoryPosts = () => {
 
   // Function to get the URL for a post (slug or generated from title)
   const getPostUrl = (post: Post) => {
-    if (post.slug) {
-      return `/blog/${post.slug}`;
-    }
-    // Generate slug from title if no slug exists
+    if (post.slug) return `/${post.slug}`;
     const titleSlug = generateSlug(post.title);
-    return `/blog/${titleSlug}`;
+    return `/${titleSlug}`;
   };
 
   if (loading) {

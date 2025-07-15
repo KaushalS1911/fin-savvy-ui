@@ -40,7 +40,6 @@ const App = () => {
                         <Routes>
                             <Route path="/" element={<Index/>}/>
                             <Route path="/blog" element={<Blog/>}/>
-                            <Route path="/blog/:slug" element={<BlogPost/>}/>
                             <Route path="/categories" element={<Categories/>}/>
                             <Route path="/category/:categorySlug" element={<CategoryPosts/>}/>
                             <Route path="/today" element={<TodayPosts/>}/>
@@ -48,6 +47,7 @@ const App = () => {
                             <Route path="/contact" element={<Contact/>}/>
                             <Route path="/search" element={<Search/>}/>
                             <Route path="/admin" element={<Admin/>}/>
+                            <Route path=":slug" element={<BlogPost/>}/>
                             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                             <Route path="*" element={<NotFound/>}/>
                         </Routes>

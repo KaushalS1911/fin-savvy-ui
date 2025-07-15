@@ -161,7 +161,7 @@ const Search = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {searchResults.map((post) => (
                   <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                    <Link to={`/blog/${post.id}`} className="block">
+                    <Link to={`/${post.id}`} className="block">
                       <img 
                         src={post.image} 
                         alt={post.title}
@@ -175,7 +175,7 @@ const Search = () => {
                         </span>
                         <span className="text-sm text-gray-500">{post.date}</span>
                       </div>
-                      <Link to={`/blog/${post.id}`}>
+                      <Link to={`/${post.id}`}>
                         <h3 
                           className="text-lg font-semibold text-gray-900 hover:text-primary transition-colors mb-2 line-clamp-2"
                           dangerouslySetInnerHTML={{ __html: highlightText(post.title, searchQuery) }}
@@ -186,7 +186,7 @@ const Search = () => {
                         dangerouslySetInnerHTML={{ __html: highlightText(post.excerpt, searchQuery) }}
                       />
                       <Link 
-                        to={`/blog/${post.id}`}
+                        to={`/${post.id}`}
                         className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
                       >
                         Read More →
