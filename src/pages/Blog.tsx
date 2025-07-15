@@ -97,7 +97,7 @@ const Blog = () => {
       
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Blog</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Blogs</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Discover insights, tips, and strategies to help you make better financial decisions and achieve your money goals.
           </p>

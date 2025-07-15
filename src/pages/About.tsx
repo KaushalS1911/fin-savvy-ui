@@ -47,7 +47,7 @@ const About = () => {
         {/* Hero Section */}
         <section className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            About FinanceBlog
+            About Us
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Your trusted source for financial insights, investment strategies, and money management tips. 

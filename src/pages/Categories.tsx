@@ -94,7 +94,7 @@ const Categories = () => {
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Browse by Category</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Categories</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
             Explore our comprehensive collection of financial articles organized by topic. 
             Find expert insights tailored to your specific interests and financial goals.
