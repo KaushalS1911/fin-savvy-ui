@@ -75,7 +75,7 @@ const TodayPosts = () => {
         ) : error ? (
           <div className="text-center text-red-500">{error}</div>
         ) : posts.length === 0 ? (
-          <div className="text-center text-gray-500 text-lg py-12">No posts published today.</div>
+          <div className="text-center text-gray-500 text-lg py-32">No posts published today.</div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {posts.map((post) => (
