@@ -173,13 +173,13 @@ const Categories = () => {
             Get the latest financial insights delivered to your inbox. No spam, just valuable content 
             to help you make better financial decisions.
           </p>
-          <div className="max-w-md mx-auto flex gap-3">
+          <div className="max-w-md mx-auto flex flex-col md:flex-row gap-3">
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 px-4 py-2 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-accent"
+              className="flex-1 px-4 py-2 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-accent w-full md:w-auto"
             />
-            <button className="bg-accent text-white px-6 py-2 rounded-md hover:bg-accent/90 transition-colors font-medium">
+            <button className="bg-accent text-white px-6 py-2 rounded-md hover:bg-accent/90 transition-colors font-medium w-full md:w-auto">
               Subscribe
             </button>
           </div>
