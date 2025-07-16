@@ -136,7 +136,6 @@ const About = () => {
             ))}
           </div>
         </section>
-7
 
         {/* Values Section */}
         <section className="mb-16">
