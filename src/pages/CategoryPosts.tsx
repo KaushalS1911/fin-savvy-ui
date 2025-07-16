@@ -30,6 +30,69 @@ interface Category {
     description: string;
 }
 
+// Utility to generate pagination range with ellipsis (compact pattern)
+function getPaginationRange(current, total) {
+  const range = [];
+  if (total <= 5) {
+    for (let i = 1; i <= total; i++) range.push(i);
+    return range;
+  }
+  if (current <= 3) {
+    range.push(1, 2, 3, 4, '...', total);
+  } else if (current >= total - 2) {
+    range.push(1, '...', total - 3, total - 2, total - 1, total);
+  } else {
+    range.push(1, '...', current - 1, current, current + 1, '...', total);
+  }
+  return range;
+}
+
+// Responsive pagination range utility (no duplicates)
+function getResponsivePaginationRange(current, total) {
+  let maxButtons = 7;
+  if (typeof window !== 'undefined' && window.innerWidth <= 640) {
+    maxButtons = 5;
+  }
+  if (total <= maxButtons) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const range = [];
+  const sideCount = Math.floor((maxButtons - 3) / 2);
+  let left = Math.max(current - sideCount, 2);
+  let right = Math.min(current + sideCount, total - 1);
+
+  // Adjust if close to start or end
+  if (current - 1 <= sideCount) {
+    left = 2;
+    right = maxButtons - 2;
+  } else if (total - current <= sideCount) {
+    left = total - (maxButtons - 2);
+    right = total - 1;
+  }
+
+  // Always add first page
+  range.push(1);
+
+  // Add left ellipsis if needed
+  if (left > 2) range.push('ellipsis');
+
+  // Add middle pages, but only if not already included
+  for (let i = left; i <= right; i++) {
+    if (i !== 1 && i !== total && !range.includes(i)) {
+      range.push(i);
+    }
+  }
+
+  // Add right ellipsis if needed
+  if (right < total - 1) range.push('ellipsis');
+
+  // Add last page if not already included
+  if (total !== 1 && !range.includes(total)) range.push(total);
+
+  return range;
+}
+
 const CategoryPosts = () => {
   const { categorySlug } = useParams<{ categorySlug: string }>();
   const [currentPage, setCurrentPage] = useState(1);
@@ -193,33 +256,38 @@ const CategoryPosts = () => {
             </div>
 
             {posts.length > 0 && (
-              <div className="flex justify-center items-center space-x-2 mb-8">
+              <div className="pagination-responsive flex justify-center items-center gap-2 mb-8 flex-wrap">
                 <button
                   onClick={() => paginate(currentPage - 1)}
                   disabled={currentPage === 1}
                   className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Previous
+                  {'<'}
                 </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
-                  <button
-                    key={number}
-                    onClick={() => paginate(number)}
-                    className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                      currentPage === number
-                        ? 'bg-primary text-white'
-                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                    }`}
-                  >
-                    {number}
-                  </button>
-                ))}
+                {getResponsivePaginationRange(currentPage, totalPages).map((item, idx) =>
+                  item === 'ellipsis'
+                    ? (
+                      <span key={`ellipsis-${idx}`} className="px-4 py-2 text-sm font-medium text-gray-500">...</span>
+                    ) : (
+                      <button
+                        key={item}
+                        onClick={() => paginate(Number(item))}
+                        className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                          currentPage === item
+                            ? 'bg-primary text-white'
+                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    )
+                )}
                 <button
                   onClick={() => paginate(currentPage + 1)}
                   disabled={currentPage === totalPages}
                   className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Next
+                  {'>'}
                 </button>
               </div>
             )}
