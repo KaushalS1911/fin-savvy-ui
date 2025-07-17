@@ -48,9 +48,9 @@ const Index = () => {
 
   // Function to get the URL for a post (slug or generated from title)
   const getPostUrl = (post: Post) => {
-    if (post.slug) return `/${post.slug}`;
-    if (post.title) return `/${generateSlug(post.title)}`;
-    return `/${post._id}`;
+    if (post.slug) return `/blog/${post.slug}`;
+    if (post.title) return `/blog/${generateSlug(post.title)}`;
+    return `/blog/${post._id}`;
   };
 
   if (loading) {

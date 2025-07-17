@@ -93,7 +93,7 @@ const BlogPost = () => {
 
   // Function to get the URL for a post (slug or generated from title)
   const getPostUrl = (post: Post) => {
-    return post.slug ? `/${post.slug}` : `/${post._id}`;
+    return post.slug ? `/blog/${post.slug}` : `/blog/${post._id}`;
   };
 
   const handleCopyLink = async () => {
