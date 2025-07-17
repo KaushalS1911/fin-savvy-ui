@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -36,6 +36,7 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -142,6 +143,46 @@ const BlogPost = () => {
         <Navigation />
 
         <main className="max-w-4xl mx-auto px-4 py-8">
+          {/* DEBUG: Force card table CSS for blog-content tables */}
+          <style>{`
+            @media (max-width: 640px) {
+              .blog-content table, 
+              .blog-content thead, 
+              .blog-content tbody, 
+              .blog-content th, 
+              .blog-content td, 
+              .blog-content tr {
+                display: block;
+                width: 100%;
+              }
+              .blog-content thead {
+                display: none;
+              }
+              .blog-content tr {
+                margin-bottom: 1.5rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                background: #fff;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+                padding: 1rem 0.5rem;
+              }
+              .blog-content td {
+                padding: 0.5rem 1rem;
+                text-align: left;
+                position: relative;
+                min-height: 2.5rem;
+                background: #e0f2fe !important;
+              }
+              .blog-content td:before {
+                content: attr(data-label);
+                display: block;
+                font-weight: 600;
+                color: #374151;
+                margin-bottom: 0.25rem;
+                font-size: 0.95em;
+              }
+            }
+          `}</style>
           <article className="max-w-4xl mx-auto px-4 py-8">
             {/* Article Header */}
             <header className="mb-8">
@@ -246,7 +287,9 @@ const BlogPost = () => {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               {/* Article Content */}
               <div className="col-span-1 lg:col-span-4">
-                <div className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{__html: post.content}}/>
+                <div className="w-full overflow-x-auto">
+                  <div ref={contentRef} className="prose prose-lg max-w-none blog-content" dangerouslySetInnerHTML={{__html: post.content}}/>
+                </div>
 
                 {/* Tags */}
                 {/*<div className="mt-8 pt-8 border-t border-gray-200">*/}
