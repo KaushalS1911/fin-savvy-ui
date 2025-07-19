@@ -3,7 +3,8 @@ import axios from 'axios';
 const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const testEndpoints = async () => {
-
+  console.log('Testing API endpoints...');
+  
   try {
     const blogsResponse = await axios.get(`${API_BASE_URL}/blogs`);
 
@@ -15,16 +16,21 @@ export const testEndpoints = async () => {
         slug: firstBlog.slug || 'No slug field'
       });
       
+      // Test individual blog by ID
       try {
         const blogByIdResponse = await axios.get(`${API_BASE_URL}/blogs/${firstBlog._id}`);
+        console.log('✅ /blogs/:id endpoint works');
       } catch (error) {
+        console.log('❌ /blogs/:id endpoint failed:', error.response?.status);
       }
       
       // Test slug endpoint if it exists
       if (firstBlog.slug) {
         try {
           const blogBySlugResponse = await axios.get(`${API_BASE_URL}/blogs/slug/${firstBlog.slug}`);
+          console.log('✅ /blogs/slug/:slug endpoint works');
         } catch (error) {
+          console.log('❌ /blogs/slug/:slug endpoint failed:', error.response?.status);
         }
       }
     }
@@ -77,6 +83,7 @@ export const getBlogBySlug = async (slug: string) => {
       throw new Error(`Blog post with slug "${slug}" not found`);
     }
   } catch (error) {
+    console.error(`Error fetching blog with slug ${slug}:`, error);
     throw error;
   }
 };
