@@ -94,6 +94,8 @@ const BlogPost = () => {
   }, [slug, navigate]);
 
   useEffect(() => {
+    if (loading) return; // Don't run observer until the main post is loaded
+
     const observer = new IntersectionObserver(
         (entries) => {
             if (entries[0].isIntersecting) {
@@ -115,7 +117,7 @@ const BlogPost = () => {
             observer.unobserve(relatedArticlesRef.current);
         }
     };
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
     if (post) {
