@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 
@@ -24,6 +24,19 @@ const Contact = () => {
     alert('Thank you for your message! We\'ll get back to you soon.');
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
+
+  useEffect(() => {
+    document.title = "Contact Us | How to Earning Money";
+    const metaDesc = document.querySelector('meta[name=\"description\"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Contact How to Earning Money for questions, feedback, or partnership opportunities. We are here to help you on your financial journey.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Contact How to Earning Money for questions, feedback, or partnership opportunities. We are here to help you on your financial journey.';
+      document.head.appendChild(meta);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

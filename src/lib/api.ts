@@ -16,10 +16,8 @@ export const testEndpoints = async () => {
         slug: firstBlog.slug || 'No slug field'
       });
       
-      // Test individual blog by ID
       try {
         const blogByIdResponse = await axios.get(`${API_BASE_URL}/blogs/${firstBlog._id}`);
-        console.log('✅ /blogs/:id endpoint works');
       } catch (error) {
         console.log('❌ /blogs/:id endpoint failed:', error.response?.status);
       }
@@ -28,7 +26,6 @@ export const testEndpoints = async () => {
       if (firstBlog.slug) {
         try {
           const blogBySlugResponse = await axios.get(`${API_BASE_URL}/blogs/slug/${firstBlog.slug}`);
-          console.log('✅ /blogs/slug/:slug endpoint works');
         } catch (error) {
           console.log('❌ /blogs/slug/:slug endpoint failed:', error.response?.status);
         }
@@ -57,31 +54,23 @@ export const getBlogs = async () => {
 
 export const getBlogBySlug = async (slug: string) => {
   try {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/blogs/slug/${slug}`);
-      return response.data;
-    } catch (slugError) {
-
-      const allBlogs = await getBlogs();
-      const post = allBlogs.find((blog: any) => {
-        if (blog.slug === slug) return true;
-        const titleSlug = blog.title
-          .toLowerCase()
-          .trim()
-          .replace(/[^\w\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/^-+|-+$/g, '');
-        
-        return titleSlug === slug;
-      });
-      
-      if (post) {
-        return post;
-      }
-      
-      throw new Error(`Blog post with slug "${slug}" not found`);
+    // Remove the API call to /blogs/slug/:slug and use only the fallback logic
+    const allBlogs = await getBlogs();
+    const post = allBlogs.find((blog: any) => {
+      if (blog.slug === slug) return true;
+      const titleSlug = blog.title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      return titleSlug === slug;
+    });
+    if (post) {
+      return post;
     }
+    throw new Error(`Blog post with slug "${slug}" not found`);
   } catch (error) {
     console.error(`Error fetching blog with slug ${slug}:`, error);
     throw error;

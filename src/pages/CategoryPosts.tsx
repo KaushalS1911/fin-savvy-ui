@@ -134,6 +134,22 @@ const CategoryPosts = () => {
     fetchPosts();
   }, [categorySlug]);
 
+  useEffect(() => {
+    if (category) {
+      document.title = `${category.name} Articles | How to Earning Money`;
+      const metaDesc = document.querySelector('meta[name=\"description\"]');
+      const desc = category.description || `Read financial blog posts about ${category.name} on How to Earning Money.`;
+      if (metaDesc) {
+        metaDesc.setAttribute('content', desc);
+      } else {
+        const meta = document.createElement('meta');
+        meta.name = 'description';
+        meta.content = desc;
+        document.head.appendChild(meta);
+      }
+    }
+  }, [category]);
+
   const totalPages = Math.ceil(posts.length / postsPerPage);
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;

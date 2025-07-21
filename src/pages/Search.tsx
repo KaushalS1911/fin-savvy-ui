@@ -13,6 +13,19 @@ const Search = () => {
   const [allPosts, setAllPosts] = useState<any[]>([]);
 
   useEffect(() => {
+    document.title = "Search Financial Articles | How to Earning Money";
+    const metaDesc = document.querySelector('meta[name=\"description\"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Search for financial articles, tips, and insights on How to Earning Money. Find answers to your money questions.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Search for financial articles, tips, and insights on How to Earning Money. Find answers to your money questions.';
+      document.head.appendChild(meta);
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const data = await getBlogs();

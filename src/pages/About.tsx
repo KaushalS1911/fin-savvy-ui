@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import sarah from '../../public/images/ChatGPT Image Jul 11, 2025, 03_22_42 PM.png'
@@ -8,6 +8,19 @@ import emily from '../../public/images/photo-1438761681033-6461ffad8d80.png'
 
 
 const About = () => {
+  useEffect(() => {
+    document.title = "About Us | How to Earning Money";
+    const metaDesc = document.querySelector('meta[name=\"description\"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Learn more about How to Earning Money, our mission, team, and commitment to providing expert financial advice and insights.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Learn more about How to Earning Money, our mission, team, and commitment to providing expert financial advice and insights.';
+      document.head.appendChild(meta);
+    }
+  }, []);
+
   const teamMembers = [
     {
       name: 'Sarah Johnson',

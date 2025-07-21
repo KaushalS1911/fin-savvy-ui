@@ -31,6 +31,19 @@ const Blog = () => {
   const postsPerPage = 6;
 
   useEffect(() => {
+    document.title = "All Blog Posts | How to Earning Money";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Browse all financial blog posts, tips, and insights to help you make smarter money decisions.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Browse all financial blog posts, tips, and insights to help you make smarter money decisions.';
+      document.head.appendChild(meta);
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchBlogs = async () => {
       try {
         // Test endpoints first

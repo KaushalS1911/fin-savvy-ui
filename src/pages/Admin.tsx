@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminNavigation from '../components/admin/AdminNavigation';
 import BlogList from '../components/admin/BlogList';
 import BlogEditor from '../components/admin/BlogEditor';
@@ -18,6 +18,19 @@ const Admin = () => {
     setEditingPost(null);
     setActiveTab('editor');
   };
+
+  useEffect(() => {
+    document.title = "Admin Dashboard | How to Earning Money";
+    const metaDesc = document.querySelector('meta[name=\"description\"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Admin dashboard for How to Earning Money. Manage posts, categories, and site settings.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Admin dashboard for How to Earning Money. Manage posts, categories, and site settings.';
+      document.head.appendChild(meta);
+    }
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {

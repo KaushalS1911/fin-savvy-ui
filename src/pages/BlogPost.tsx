@@ -26,6 +26,7 @@ interface Post {
     avatar: string;
   };
   tags: string[];
+  excerpt?: string; // Added excerpt to the interface
 }
 
 const BlogPost = () => {
@@ -91,6 +92,22 @@ const BlogPost = () => {
 
     fetchPost();
   }, [slug, navigate]);
+
+  useEffect(() => {
+    if (post) {
+      document.title = `${post.title} | How to Earning Money`;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      const desc = post.excerpt || post.content?.replace(/<[^>]+>/g, '').slice(0, 150) || 'Read this financial blog post on How to Earning Money.';
+      if (metaDesc) {
+        metaDesc.setAttribute('content', desc);
+      } else {
+        const meta = document.createElement('meta');
+        meta.name = 'description';
+        meta.content = desc;
+        document.head.appendChild(meta);
+      }
+    }
+  }, [post]);
 
   // Function to get the URL for a post (slug or generated from title)
   const getPostUrl = (post: Post) => {

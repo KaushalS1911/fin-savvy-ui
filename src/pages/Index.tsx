@@ -112,6 +112,9 @@ const Index = () => {
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
+        <h1 className="sr-only">
+          Finance News, Insights & Market Updates
+        </h1>
         <section className="mb-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Featured Post */}

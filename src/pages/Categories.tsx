@@ -28,6 +28,19 @@ const Categories = () => {
   const [popularCategories, setPopularCategories] = useState<Category[]>([]);
 
   useEffect(() => {
+    document.title = "Categories | How to Earning Money";
+    const metaDesc = document.querySelector('meta[name=\"description\"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Explore all financial blog categories and find expert insights tailored to your interests and money goals.');
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = 'Explore all financial blog categories and find expert insights tailored to your interests and money goals.';
+      document.head.appendChild(meta);
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const [categoriesData, postsData] = await Promise.all([
