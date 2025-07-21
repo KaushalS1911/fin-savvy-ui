@@ -143,46 +143,7 @@ const BlogPost = () => {
         <Navigation />
 
         <main className="max-w-4xl mx-auto px-4 py-8">
-          {/* DEBUG: Force card table CSS for blog-content tables */}
-          {/*<style>{`*/}
-          {/*  @media (max-width: 640px) {*/}
-          {/*    .blog-content table, */}
-          {/*    .blog-content thead, */}
-          {/*    .blog-content tbody, */}
-          {/*    .blog-content th, */}
-          {/*    .blog-content td, */}
-          {/*    .blog-content tr {*/}
-          {/*      display: block;*/}
-          {/*      width: 100%;*/}
-          {/*    }*/}
-          {/*    .blog-content thead {*/}
-          {/*      display: none;*/}
-          {/*    }*/}
-          {/*    .blog-content tr {*/}
-          {/*      margin-bottom: 1.5rem;*/}
-          {/*      border: 1px solid #e5e7eb;*/}
-          {/*      border-radius: 0.5rem;*/}
-          {/*      background: #fff;*/}
-          {/*      box-shadow: 0 1px 2px rgba(0,0,0,0.03);*/}
-          {/*      padding: 1rem 0.5rem;*/}
-          {/*    }*/}
-          {/*    .blog-content td {*/}
-          {/*      padding: 0.5rem 1rem;*/}
-          {/*      text-align: left;*/}
-          {/*      position: relative;*/}
-          {/*      min-height: 2.5rem;*/}
-          {/*      background: #e0f2fe !important;*/}
-          {/*    }*/}
-          {/*    .blog-content td:before {*/}
-          {/*      content: attr(data-label);*/}
-          {/*      display: block;*/}
-          {/*      font-weight: 600;*/}
-          {/*      color: #374151;*/}
-          {/*      margin-bottom: 0.25rem;*/}
-          {/*      font-size: 0.95em;*/}
-          {/*    }*/}
-          {/*  }*/}
-          {/*`}</style>*/}
+
           <article className="max-w-4xl mx-auto px-4 py-8">
             {/* Article Header */}
             <header className="mb-8">
@@ -280,7 +241,7 @@ const BlogPost = () => {
               <img
                   src={post.image}
                   alt={post.title}
-                  className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
+                  className="w-full h-full object-contain rounded-lg shadow-lg"
               />
             </header>
 
