@@ -10,6 +10,10 @@ interface Category {
   name: string;
   description: string;
   image?: string;
+  image_alt?: string;
+  image_small?: string;
+  image_medium?: string;
+  image_large?: string;
 }
 
 interface Post {
@@ -28,17 +32,107 @@ const Categories = () => {
   const [popularCategories, setPopularCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    document.title = "Categories | How to Earning Money";
-    const metaDesc = document.querySelector('meta[name=\"description\"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'Explore all financial blog categories and find expert insights tailored to your interests and money goals.');
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = 'Explore all financial blog categories and find expert insights tailored to your interests and money goals.';
-      document.head.appendChild(meta);
+    const canonicalUrl = window.location.origin + window.location.pathname;
+    const title = "Categories | How to Earning Money";
+    const description = "Explore all financial blog categories and find expert insights tailored to your interests and money goals.";
+
+    // Helper to set meta tags
+    const setMetaTag = (attr: 'name' | 'property', value: string, content: string) => {
+      let element = document.querySelector(`meta[${attr}="${value}"]`) as HTMLMetaElement;
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(attr, value);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('content', content);
+    };
+
+    // Update standard meta tags
+    document.title = title;
+    setMetaTag('name', 'description', description);
+
+    // Update Open Graph meta tags
+    setMetaTag('property', 'og:title', title);
+    setMetaTag('property', 'og:description', description);
+    setMetaTag('property', 'og:image', 'https://financeblog.com/og-image.jpg');
+    setMetaTag('property', 'og:url', canonicalUrl);
+    setMetaTag('property', 'og:type', 'website');
+
+    // Update Twitter Card meta tags
+    setMetaTag('name', 'twitter:card', 'summary_large_image');
+    setMetaTag('name', 'twitter:title', title);
+    setMetaTag('name', 'twitter:description', description);
+    setMetaTag('name', 'twitter:image', 'https://financeblog.com/twitter-image.jpg');
+
+    // Add schema markup for categories page
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": title,
+      "description": description,
+      "url": canonicalUrl,
+      "publisher": {
+        "@type": "Organization",
+        "name": "How to Earning Money",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://financeblog.com/logo.png"
+        }
+      },
+      "mainEntity": {
+        "@type": "ItemList",
+        "itemListElement": categories.map((category, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "Thing",
+            "name": category.name,
+            "description": category.description,
+            "url": `${window.location.origin}/category/${generateSlug(category.name)}`,
+            "image": category.image
+          }
+        }))
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": window.location.origin
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Categories",
+            "item": canonicalUrl
+          }
+        ]
+      }
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.innerHTML = JSON.stringify(schema);
+    document.head.appendChild(script);
+
+    // Canonical Link
+    let link = document.querySelector("link[rel='canonical']");
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
     }
-  }, []);
+    link.setAttribute('href', canonicalUrl);
+
+    return () => {
+      const script = document.querySelector('script[type="application/ld+json"]');
+      if (script) {
+        document.head.removeChild(script);
+      }
+    };
+  }, [categories]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -127,10 +221,19 @@ const Categories = () => {
               className="group bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
               <div className="relative">
-                <img 
-                  src={category.image}
-                  alt={category.name}
+                <img
+                  src={category.image_medium || category.image}
+                  srcSet={[
+                    category.image_small ? `${category.image_small} 400w` : '',
+                    category.image_medium ? `${category.image_medium} 768w` : '',
+                    category.image_large ? `${category.image_large} 1200w` : ''
+                  ].filter(Boolean).join(', ')}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 1200px"
+                  alt={category.image_alt || category.name}
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  width="378"
+                  height="192"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">

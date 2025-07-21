@@ -20,6 +20,14 @@ interface Post {
   createdAt?: string;
   slug?: string;
   featured?: boolean;
+  image_small?: string;
+  image_medium?: string;
+  image_large?: string;
+  image_alt?: string;
+  author?: {
+    name: string;
+    bio?: string;
+  };
 }
 
 const Index = () => {
@@ -27,6 +35,122 @@ const Index = () => {
   const [latestPosts, setLatestPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const canonicalUrl = window.location.origin + window.location.pathname;
+    const title = "Finance News, Insights & Market Updates | How to Earning Money";
+    const description = 'Get the latest finance news, market updates, and expert insights to help you make smarter money decisions.';
+
+    // Helper to set meta tags
+    const setMetaTag = (attr: 'name' | 'property', value: string, content: string) => {
+      let element = document.querySelector(`meta[${attr}="${value}"]`) as HTMLMetaElement;
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(attr, value);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('content', content);
+    };
+
+    // Update standard meta tags
+    document.title = title;
+    setMetaTag('name', 'description', description);
+
+    // Update Open Graph meta tags
+    setMetaTag('property', 'og:title', title);
+    setMetaTag('property', 'og:description', description);
+    setMetaTag('property', 'og:image', 'https://financeblog.com/og-image.jpg'); // Add a default image
+    setMetaTag('property', 'og:url', canonicalUrl);
+    setMetaTag('property', 'og:type', 'website');
+
+    // Update Twitter Card meta tags
+    setMetaTag('name', 'twitter:card', 'summary_large_image');
+    setMetaTag('name', 'twitter:title', title);
+    setMetaTag('name', 'twitter:description', description);
+    setMetaTag('name', 'twitter:image', 'https://financeblog.com/twitter-image.jpg'); // Add a default image
+
+    // Add comprehensive schema markup for homepage
+    const schema = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": window.location.origin + "/#website",
+          "url": window.location.origin,
+          "name": "How to Earning Money",
+          "description": description,
+          "publisher": {
+            "@type": "Organization",
+            "name": "How to Earning Money",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://financeblog.com/logo.png"
+            }
+          },
+          "potentialAction": [
+            {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": `${window.location.origin}/search?q={search_term_string}`
+              },
+              "query-input": "required name=search_term_string"
+            }
+          ]
+        },
+        {
+          "@type": "ItemList",
+          "@id": window.location.origin + "/#featuredPosts",
+          "name": "Featured Financial Articles",
+          "itemListElement": featuredPosts.map((post, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "item": {
+              "@type": "Article",
+              "headline": post.title,
+              "description": post.excerpt,
+              "image": post.image_large || post.image,
+              "url": `${window.location.origin}${getPostUrl(post)}`,
+              "datePublished": post.createdAt || post.date,
+              "author": {
+                "@type": "Person",
+                "name": post.author?.name || "FinanceBlog"
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "How to Earning Money",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://financeblog.com/logo.png"
+                }
+              }
+            }
+          }))
+        }
+      ]
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.innerHTML = JSON.stringify(schema);
+    document.head.appendChild(script);
+
+    // Canonical Link
+    let link = document.querySelector("link[rel='canonical']");
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', canonicalUrl);
+
+    return () => {
+      const script = document.querySelector('script[type="application/ld+json"]');
+      if (script) {
+        document.head.removeChild(script);
+      }
+    };
+  }, [featuredPosts]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -123,9 +247,17 @@ const Index = () => {
               <Link to={getPostUrl(featuredPosts[0])} className="group block">
                 <div className="relative overflow-hidden rounded-xl shadow-lg">
                   <img 
-                    src={featuredPosts[0].image} 
-                    alt={featuredPosts[0].title}
+                    src={featuredPosts[0].image_medium || featuredPosts[0].image}
+                    srcSet={[
+                      featuredPosts[0].image_small ? `${featuredPosts[0].image_small} 400w` : '',
+                      featuredPosts[0].image_medium ? `${featuredPosts[0].image_medium} 768w` : '',
+                      featuredPosts[0].image_large ? `${featuredPosts[0].image_large} 1200w` : ''
+                    ].filter(Boolean).join(', ')}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 1200px"
+                    alt={featuredPosts[0].image_alt || featuredPosts[0].title}
                     className="w-full h-96 object-cover group-hover:scale-105 transition-transform duration-300"
+                    width="784"
+                    height="384"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
@@ -150,10 +282,19 @@ const Index = () => {
               {featuredPosts.slice(1).map((post) => (
                 <Link key={post._id} to={getPostUrl(post)} className="group block">
                   <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                    <img 
-                      src={post.image} 
-                      alt={post.title}
+                    <img
+                      src={post.image_medium || post.image}
+                      srcSet={[
+                        post.image_small ? `${post.image_small} 400w` : '',
+                        post.image_medium ? `${post.image_medium} 768w` : '',
+                        post.image_large ? `${post.image_large} 1200w` : ''
+                      ].filter(Boolean).join(', ')}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 1200px"
+                      alt={post.image_alt || post.title}
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      width="378"
+                      height="192"
+                      loading="lazy"
                     />
                     <div className="p-4">
                       <span className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
@@ -192,10 +333,19 @@ const Index = () => {
               {latestPosts.map((post) => (
                 <article key={post._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                   <Link to={getPostUrl(post)} className="block">
-                    <img 
-                      src={post.image} 
-                      alt={post.title}
+                    <img
+                      src={post.image_medium || post.image}
+                      srcSet={[
+                        post.image_small ? `${post.image_small} 400w` : '',
+                        post.image_medium ? `${post.image_medium} 768w` : '',
+                        post.image_large ? `${post.image_large} 1200w` : ''
+                      ].filter(Boolean).join(', ')}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 1200px"
+                      alt={post.image_alt || post.title}
                       className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                      width="378"
+                      height="192"
+                      loading="lazy"
                     />
                   </Link>
                   <div className="p-6">

@@ -22,6 +22,10 @@ interface Post {
   author: {
     name: string;
   };
+  image_small?: string;
+  image_medium?: string;
+  image_large?: string;
+  image_alt?: string;
 }
 
 interface Category {
@@ -136,17 +140,46 @@ const CategoryPosts = () => {
 
   useEffect(() => {
     if (category) {
-      document.title = `${category.name} Articles | How to Earning Money`;
-      const metaDesc = document.querySelector('meta[name=\"description\"]');
-      const desc = category.description || `Read financial blog posts about ${category.name} on How to Earning Money.`;
-      if (metaDesc) {
-        metaDesc.setAttribute('content', desc);
-      } else {
-        const meta = document.createElement('meta');
-        meta.name = 'description';
-        meta.content = desc;
-        document.head.appendChild(meta);
+      const canonicalUrl = window.location.origin + window.location.pathname;
+      const title = `${category.name} Articles | How to Earning Money`;
+      const description = category.description || `Read financial blog posts about ${category.name} on How to Earning Money.`;
+
+      // Helper to set meta tags
+      const setMetaTag = (attr: 'name' | 'property', value: string, content: string) => {
+        let element = document.querySelector(`meta[${attr}="${value}"]`) as HTMLMetaElement;
+        if (!element) {
+          element = document.createElement('meta');
+          element.setAttribute(attr, value);
+          document.head.appendChild(element);
+        }
+        element.setAttribute('content', content);
+      };
+
+      // Update standard meta tags
+      document.title = title;
+      setMetaTag('name', 'description', description);
+
+      // Update Open Graph meta tags
+      setMetaTag('property', 'og:title', title);
+      setMetaTag('property', 'og:description', description);
+      setMetaTag('property', 'og:image', 'https://financeblog.com/og-image.jpg'); // Consider a category-specific image
+      setMetaTag('property', 'og:url', canonicalUrl);
+      setMetaTag('property', 'og:type', 'website');
+
+      // Update Twitter Card meta tags
+      setMetaTag('name', 'twitter:card', 'summary_large_image');
+      setMetaTag('name', 'twitter:title', title);
+      setMetaTag('name', 'twitter:description', description);
+      setMetaTag('name', 'twitter:image', 'https://financeblog.com/twitter-image.jpg'); // Consider a category-specific image
+
+      // Canonical Link
+      let link = document.querySelector("link[rel='canonical']");
+      if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', 'canonical');
+        document.head.appendChild(link);
       }
+      link.setAttribute('href', canonicalUrl);
     }
   }, [category]);
 
@@ -234,9 +267,18 @@ const CategoryPosts = () => {
                     <Link to={getPostUrl(post)} className="block">
                       <div className="relative overflow-hidden">
                         <img 
-                          src={post.image} 
-                          alt={post.title}
+                          src={post.image_medium || post.image}
+                          srcSet={[
+                            post.image_small ? `${post.image_small} 400w` : '',
+                            post.image_medium ? `${post.image_medium} 768w` : '',
+                            post.image_large ? `${post.image_large} 1200w` : ''
+                          ].filter(Boolean).join(', ')}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 1200px"
+                          alt={post.image_alt || post.title}
                           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                          width="378"
+                          height="192"
+                          loading="lazy"
                         />
                         <div className="absolute top-4 left-4">
                           <span className="inline-block px-3 py-1 bg-primary text-white text-sm font-medium rounded">

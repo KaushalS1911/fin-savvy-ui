@@ -21,12 +21,42 @@ interface Post {
   author: {
     name: string;
   };
+  image_small?: string;
+  image_medium?: string;
+  image_large?: string;
+  image_alt?: string;
 }
 
 const TodayPosts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.title = "Today's Financial Blog Posts | How to Earning Money";
+
+    // Meta Description
+    const metaDesc = document.querySelector('meta[name="description"]');
+    const description = "See all financial blog posts published today. Stay updated with the latest money tips, news, and insights.";
+    if (metaDesc) {
+      metaDesc.setAttribute('content', description);
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'description';
+      meta.content = description;
+      document.head.appendChild(meta);
+    }
+
+    // Canonical Link
+    const canonicalUrl = window.location.origin + window.location.pathname;
+    let link = document.querySelector("link[rel='canonical']");
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', canonicalUrl);
+  }, []);
 
   useEffect(() => {
     const fetchTodayPosts = async () => {
@@ -83,9 +113,15 @@ const TodayPosts = () => {
                 <Link to={getPostUrl(post)} className="block">
                   <div className="relative w-full h-56 bg-gray-100">
                     {post.image ? (
-                      <img 
-                        src={post.image} 
-                        alt={post.title}
+                      <img
+                        src={post.image_medium || post.image}
+                        srcSet={[
+                          post.image_small ? `${post.image_small} 400w` : '',
+                          post.image_medium ? `${post.image_medium} 768w` : '',
+                          post.image_large ? `${post.image_large} 1200w` : ''
+                        ].filter(Boolean).join(', ')}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 1200px"
+                        alt={post.image_alt || post.title}
                         className="w-full h-full object-cover rounded-t-lg transition-transform duration-300 group-hover:scale-105"
                       />
                     ) : (

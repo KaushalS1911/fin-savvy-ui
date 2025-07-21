@@ -7,6 +7,7 @@ import { BlogPostSkeleton } from '../components/SkeletonLoader';
 import { isValidObjectId, generateSlug } from '../lib/utils';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from '../components/ui/dialog';
 import { Share2, MessageCircle, Facebook, Twitter, Linkedin, Copy, Check } from 'lucide-react';
+import RelatedArticles from '../components/RelatedArticles';
 
 interface Post {
   _id: string;
@@ -19,6 +20,7 @@ interface Post {
   readTime: string;
   date: string;
   createdAt?: string;
+  updatedAt?: string;
   slug?: string;
   author: {
     name: string;
@@ -27,17 +29,22 @@ interface Post {
   };
   tags: string[];
   excerpt?: string; // Added excerpt to the interface
+  image_alt?: string; // For descriptive alt text
+  image_small?: string;
+  image_medium?: string;
+  image_large?: string;
 }
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [post, setPost] = useState<Post | null>(null);
-  const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const relatedArticlesRef = useRef<HTMLDivElement>(null);
+  const [showRelatedArticles, setShowRelatedArticles] = useState(false);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -75,13 +82,6 @@ const BlogPost = () => {
 
         setPost(postData);
 
-        // Fetch related posts (e.g., all posts and filter by category)
-        const allPostsData = await getBlogs();
-        const related = allPostsData
-            .filter((p: Post) => p.category.name === postData.category.name && p._id !== postData._id)
-            .slice(0, 3);
-        setRelatedPosts(related);
-
         setLoading(false);
       } catch (err) {
         console.error('Failed to fetch blog post:', err);
@@ -94,18 +94,158 @@ const BlogPost = () => {
   }, [slug, navigate]);
 
   useEffect(() => {
+    const observer = new IntersectionObserver(
+        (entries) => {
+            if (entries[0].isIntersecting) {
+                setShowRelatedArticles(true);
+                if (relatedArticlesRef.current) {
+                    observer.unobserve(relatedArticlesRef.current);
+                }
+            }
+        },
+        { threshold: 0.1 }
+    );
+
+    if (relatedArticlesRef.current) {
+        observer.observe(relatedArticlesRef.current);
+    }
+
+    return () => {
+        if (relatedArticlesRef.current) {
+            observer.unobserve(relatedArticlesRef.current);
+        }
+    };
+  }, []);
+
+  useEffect(() => {
     if (post) {
-      document.title = `${post.title} | How to Earning Money`;
-      const metaDesc = document.querySelector('meta[name="description"]');
+      const canonicalUrl = window.location.origin + window.location.pathname;
       const desc = post.excerpt || post.content?.replace(/<[^>]+>/g, '').slice(0, 150) || 'Read this financial blog post on How to Earning Money.';
-      if (metaDesc) {
-        metaDesc.setAttribute('content', desc);
-      } else {
-        const meta = document.createElement('meta');
-        meta.name = 'description';
-        meta.content = desc;
-        document.head.appendChild(meta);
+
+      // Helper to set meta tags
+      const setMetaTag = (attr: 'name' | 'property', value: string, content: string) => {
+        let element = document.querySelector(`meta[${attr}="${value}"]`) as HTMLMetaElement;
+        if (!element) {
+          element = document.createElement('meta');
+          element.setAttribute(attr, value);
+          document.head.appendChild(element);
+        }
+        element.setAttribute('content', content);
+      };
+
+      // Update standard meta tags
+      document.title = `${post.title} | How to Earning Money`;
+      setMetaTag('name', 'description', desc);
+
+      // Update Open Graph meta tags
+      setMetaTag('property', 'og:title', post.title);
+      setMetaTag('property', 'og:description', desc);
+      setMetaTag('property', 'og:image', post.image);
+      setMetaTag('property', 'og:url', canonicalUrl);
+      setMetaTag('property', 'og:type', 'article');
+      
+      // Update Twitter Card meta tags
+      setMetaTag('name', 'twitter:card', 'summary_large_image');
+      setMetaTag('name', 'twitter:title', post.title);
+      setMetaTag('name', 'twitter:description', desc);
+      setMetaTag('name', 'twitter:image', post.image);
+
+      // Canonical Link
+      let link = document.querySelector("link[rel='canonical']");
+      if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', 'canonical');
+        document.head.appendChild(link);
       }
+      link.setAttribute('href', canonicalUrl);
+      
+      // Preload the main image for better LCP
+      const preloadLink = document.createElement('link');
+      preloadLink.rel = 'preload';
+      preloadLink.as = 'image';
+      preloadLink.href = post.image;
+      document.head.appendChild(preloadLink);
+
+      // JSON-LD Structured Data
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.innerHTML = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": post.title,
+        "description": desc,
+        "image": [
+          post.image_large || post.image,
+          post.image_medium || post.image,
+          post.image_small || post.image
+        ].filter((img, index, self) => img && self.indexOf(img) === index),
+        "author": {
+          "@type": "Person",
+          "name": post.author?.name || "FinanceBlog",
+          "url": `https://financeblog.com/author/${post.author?.name?.toLowerCase().replace(/\s+/g, '-')}`,
+          "jobTitle": "Financial Writer",
+          "description": post.author?.bio || "Expert financial writer at How to Earning Money"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "How to Earning Money",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://financeblog.com/logo.png"
+          }
+        },
+        "datePublished": post.createdAt || post.date,
+        "dateModified": post.updatedAt || post.createdAt || post.date,
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": window.location.href
+        },
+        "keywords": post.tags?.join(", ") || `${post.category.name}, finance, money management`,
+        "articleSection": post.category.name,
+        "wordCount": post.content?.split(/\s+/).length || 0
+      });
+      document.head.appendChild(script);
+
+      // Add breadcrumb schema
+      const breadcrumbScript = document.createElement('script');
+      breadcrumbScript.type = 'application/ld+json';
+      breadcrumbScript.innerHTML = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": window.location.origin
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": post.category.name,
+            "item": `${window.location.origin}/category/${post.category.name.toLowerCase().replace(/\s+/g, '-')}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": post.title,
+            "item": window.location.href
+          }
+        ]
+      });
+      document.head.appendChild(breadcrumbScript);
+      
+      return () => {
+        const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+        scripts.forEach(script => {
+          document.head.removeChild(script);
+        });
+        // Clean up preload link
+        const preloadLinkToRemove = document.querySelector(`link[rel="preload"][href="${post.image}"]`);
+        if (preloadLinkToRemove) {
+          document.head.removeChild(preloadLinkToRemove);
+        }
+      };
     }
   }, [post]);
 
@@ -256,9 +396,17 @@ const BlogPost = () => {
               </div>
 
               <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-contain rounded-lg shadow-lg"
+                  src={post.image_medium || post.image}
+                  srcSet={[
+                    post.image_small ? `${post.image_small} 400w` : '',
+                    post.image_medium ? `${post.image_medium} 768w` : '',
+                    post.image_large ? `${post.image_large} 1200w` : ''
+                  ].filter(Boolean).join(', ')}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 768px, 1200px"
+                  alt={post.image_alt || post.title}
+                  className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
+                  width="768"
+                  height="384"
               />
             </header>
 
@@ -270,34 +418,19 @@ const BlogPost = () => {
                 </div>
 
                 {/* Related Articles */}
-                <div className="mt-12">
+                <div ref={relatedArticlesRef} className="mt-12">
                   <h3 className="text-2xl font-bold mb-6">Related Articles</h3>
-                  {relatedPosts.length === 0 ? (
-                      <div className="text-gray-500 text-center py-8">No related articles found.</div>
-                  ) : (
+                  {showRelatedArticles && post && (
+                      <RelatedArticles
+                          currentPostId={post._id}
+                          categoryName={post.category.name}
+                      />
+                  )}
+                  {!showRelatedArticles && (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {relatedPosts.map((relatedPost) => (
-                            <Link
-                                key={relatedPost._id}
-                                to={getPostUrl(relatedPost)}
-                                className="group block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                            >
-                              <img
-                                  src={relatedPost.image}
-                                  alt={relatedPost.title}
-                                  className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                              <div className="p-4">
-                          <span
-                              className="inline-block px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded mb-2">
-                            {relatedPost.category.name}
-                          </span>
-                                <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors text-sm line-clamp-2">
-                                  {relatedPost.title}
-                                </h4>
-                              </div>
-                            </Link>
-                        ))}
+                        <div className="h-48 bg-gray-200 rounded-lg animate-pulse"></div>
+                        <div className="h-48 bg-gray-200 rounded-lg animate-pulse"></div>
+                        <div className="h-48 bg-gray-200 rounded-lg animate-pulse"></div>
                       </div>
                   )}
                 </div>

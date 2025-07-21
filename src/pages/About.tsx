@@ -10,7 +10,7 @@ import emily from '../../public/images/photo-1438761681033-6461ffad8d80.png'
 const About = () => {
   useEffect(() => {
     document.title = "About Us | How to Earning Money";
-    const metaDesc = document.querySelector('meta[name=\"description\"]');
+    const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute('content', 'Learn more about How to Earning Money, our mission, team, and commitment to providing expert financial advice and insights.');
     } else {
@@ -19,6 +19,54 @@ const About = () => {
       meta.content = 'Learn more about How to Earning Money, our mission, team, and commitment to providing expert financial advice and insights.';
       document.head.appendChild(meta);
     }
+    // Canonical Link
+    const canonicalUrl = window.location.origin + window.location.pathname;
+    let link = document.querySelector("link[rel='canonical']");
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', canonicalUrl);
+
+    // Add Organization/AboutPage schema
+    const schema = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "name": "How to Earning Money",
+          "url": window.location.origin,
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://financeblog.com/logo.png"
+          },
+          "sameAs": [
+            "https://www.facebook.com/financeblog",
+            "https://twitter.com/financeblog"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Support",
+            "email": "support@financeblog.com"
+          }
+        },
+        {
+          "@type": "AboutPage",
+          "name": "About Us | How to Earning Money",
+          "description": 'Learn more about How to Earning Money, our mission, team, and commitment to providing expert financial advice and insights.',
+          "url": canonicalUrl
+        }
+      ]
+    };
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.innerHTML = JSON.stringify(schema);
+    document.head.appendChild(script);
+    return () => {
+      const script = document.querySelector('script[type="application/ld+json"]');
+      if (script) document.head.removeChild(script);
+    };
   }, []);
 
   const teamMembers = [
@@ -70,6 +118,8 @@ const About = () => {
             src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=400&fit=crop" 
             alt="Financial planning and analysis"
             className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg"
+            width="1200"
+            height="400"
           />
         </section>
 
@@ -110,6 +160,9 @@ const About = () => {
                 src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&h=400&fit=crop" 
                 alt="Financial planning workspace"
                 className="w-full h-80 object-cover rounded-lg shadow-lg"
+                width="600"
+                height="400"
+                loading="lazy"
               />
             </div>
           </div>
@@ -138,6 +191,9 @@ const About = () => {
                   src={member.image}
                   alt={member.name}
                   className="w-full h-64 object-cover"
+                  width="378"
+                  height="256"
+                  loading="lazy"
                 />
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-1">{member.name}</h3>

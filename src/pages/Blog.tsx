@@ -3,7 +3,7 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import { Link } from 'react-router-dom';
-import { getBlogs, testEndpoints } from '../lib/api';
+import { getBlogs } from '../lib/api';
 import { PostCardSkeleton } from '../components/SkeletonLoader';
 import { generateSlug } from '../lib/utils';
 
@@ -32,23 +32,33 @@ const Blog = () => {
 
   useEffect(() => {
     document.title = "All Blog Posts | How to Earning Money";
+    
+    // Meta Description
     const metaDesc = document.querySelector('meta[name="description"]');
+    const description = 'Browse all financial blog posts, tips, and insights to help you make smarter money decisions.';
     if (metaDesc) {
-      metaDesc.setAttribute('content', 'Browse all financial blog posts, tips, and insights to help you make smarter money decisions.');
+      metaDesc.setAttribute('content', description);
     } else {
       const meta = document.createElement('meta');
       meta.name = 'description';
-      meta.content = 'Browse all financial blog posts, tips, and insights to help you make smarter money decisions.';
+      meta.content = description;
       document.head.appendChild(meta);
     }
+
+    // Canonical Link
+    const canonicalUrl = window.location.origin + window.location.pathname;
+    let link = document.querySelector("link[rel='canonical']");
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', canonicalUrl);
   }, []);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        // Test endpoints first
-        await testEndpoints();
-        
         const data = await getBlogs();
         setAllPosts(data);
         setLoading(false);
@@ -190,6 +200,9 @@ const Blog = () => {
                         src={post.image} 
                         alt={post.title}
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        width="378"
+                        height="192"
+                        loading="lazy"
                       />
                       <div className="absolute top-4 left-4">
                         <span className="inline-block px-3 py-1 bg-primary text-white text-sm font-medium rounded">

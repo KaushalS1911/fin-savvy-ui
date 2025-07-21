@@ -27,7 +27,7 @@ const Contact = () => {
 
   useEffect(() => {
     document.title = "Contact Us | How to Earning Money";
-    const metaDesc = document.querySelector('meta[name=\"description\"]');
+    const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute('content', 'Contact How to Earning Money for questions, feedback, or partnership opportunities. We are here to help you on your financial journey.');
     } else {
@@ -36,6 +36,44 @@ const Contact = () => {
       meta.content = 'Contact How to Earning Money for questions, feedback, or partnership opportunities. We are here to help you on your financial journey.';
       document.head.appendChild(meta);
     }
+    // Canonical Link
+    const canonicalUrl = window.location.origin + window.location.pathname;
+    let link = document.querySelector("link[rel='canonical']");
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', canonicalUrl);
+
+    // Add ContactPage/ContactPoint schema
+    const schema = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "ContactPage",
+          "name": "Contact Us | How to Earning Money",
+          "description": 'Contact How to Earning Money for questions, feedback, or partnership opportunities. We are here to help you on your financial journey.',
+          "url": canonicalUrl
+        },
+        {
+          "@type": "ContactPoint",
+          "contactType": "Customer Support",
+          "email": "support@financeblog.com",
+          "url": canonicalUrl,
+          "availableLanguage": ["English"],
+          "areaServed": "Worldwide"
+        }
+      ]
+    };
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.innerHTML = JSON.stringify(schema);
+    document.head.appendChild(script);
+    return () => {
+      const script = document.querySelector('script[type="application/ld+json"]');
+      if (script) document.head.removeChild(script);
+    };
   }, []);
 
   return (

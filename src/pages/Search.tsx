@@ -14,7 +14,7 @@ const Search = () => {
 
   useEffect(() => {
     document.title = "Search Financial Articles | How to Earning Money";
-    const metaDesc = document.querySelector('meta[name=\"description\"]');
+    const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute('content', 'Search for financial articles, tips, and insights on How to Earning Money. Find answers to your money questions.');
     } else {
@@ -23,7 +23,42 @@ const Search = () => {
       meta.content = 'Search for financial articles, tips, and insights on How to Earning Money. Find answers to your money questions.';
       document.head.appendChild(meta);
     }
-  }, []);
+    // Canonical Link
+    const canonicalUrl = window.location.origin + window.location.pathname;
+    let link = document.querySelector("link[rel='canonical']");
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', canonicalUrl);
+
+    // Add SearchResultsPage schema
+    if (searchQuery && searchResults.length > 0) {
+      const schema = {
+        "@context": "https://schema.org",
+        "@type": "SearchResultsPage",
+        "name": `Search results for '${searchQuery}' | How to Earning Money`,
+        "description": `Search results for '${searchQuery}' on How to Earning Money. Find financial articles, tips, and insights.`,
+        "url": canonicalUrl + `?q=${encodeURIComponent(searchQuery)}`,
+        "mainEntity": searchResults.slice(0, 10).map((post: any, idx: number) => ({
+          "@type": "Result",
+          "position": idx + 1,
+          "url": window.location.origin + `/blog/${post.slug || post.id}`,
+          "name": post.title,
+          "description": post.excerpt
+        }))
+      };
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.innerHTML = JSON.stringify(schema);
+      document.head.appendChild(script);
+      return () => {
+        const script = document.querySelector('script[type="application/ld+json"]');
+        if (script) document.head.removeChild(script);
+      };
+    }
+  }, [searchQuery, searchResults]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
