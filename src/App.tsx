@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -8,24 +8,21 @@ import TagManager from 'react-gtm-module';
 import { useEffect } from "react";
 import CookieConsent from "./components/CookieConsent";
 import { PostCardSkeleton } from './components/SkeletonLoader';
+import ErrorBoundary from './components/ErrorBoundary'; // Import ErrorBoundary
+import Index from './pages/Index';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import Categories from './pages/Categories';
+import CategoryPosts from './pages/CategoryPosts';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-import Footer from './components/Footer';
+import Search from './pages/Search';
+import Admin from './pages/Admin';
+import NotFound from './pages/NotFound';
+import TodayPosts from './pages/TodayPosts';
 import Navigation from './components/Navigation';
-
-// Lazy load page components
-const Index = lazy(() => import('./pages/Index'));
-const Blog = lazy(() => import('./pages/Blog'));
-const BlogPost = lazy(() => import('./pages/BlogPost'));
-const Categories = lazy(() => import('./pages/Categories'));
-const CategoryPosts = lazy(() => import('./pages/CategoryPosts'));
-const About = lazy(() => import('./pages/About'));
-const Contact = lazy(() => import('./pages/Contact'));
-const Search = lazy(() => import('./pages/Search'));
-const Admin = lazy(() => import('./pages/Admin'));
-const NotFound = lazy(() => import('./pages/NotFound'));
-const TodayPosts = lazy(() => import('./pages/TodayPosts'));
+import Footer from './components/Footer';
 
 const queryClient = new QueryClient();
 
@@ -46,22 +43,24 @@ const App = () => {
                     <Sonner/>
                     <BrowserRouter>
                         <Navigation />
-                        <Suspense fallback={<PostCardSkeleton />}>
-                            <Routes>
-                                <Route path="/" element={<Index/>}/>
-                                <Route path="/blog" element={<Blog/>}/>
-                                <Route path="/categories" element={<Categories/>}/>
-                                <Route path="/category/:categorySlug" element={<CategoryPosts/>}/>
-                                <Route path="/today" element={<TodayPosts/>}/>
-                                <Route path="/about" element={<AboutPage/>}/>
-                                <Route path="/contact" element={<ContactPage/>}/>
-                                <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
-                                <Route path="/search" element={<Search/>}/>
-                                <Route path="/admin" element={<Admin/>}/>
-                                <Route path="/blog/:slug" element={<BlogPost/>}/>
-                                <Route path="*" element={<NotFound/>}/>
-                            </Routes>
-                        </Suspense>
+                        <ErrorBoundary>
+                            <Suspense fallback={<div className="flex-grow w-full"><PostCardSkeleton /></div>}>
+                                <Routes>
+                                    <Route path="/" element={<Index/>}/>
+                                    <Route path="/blog" element={<Blog/>}/>
+                                    <Route path="/categories" element={<Categories/>}/>
+                                    <Route path="/category/:categorySlug" element={<CategoryPosts/>}/>
+                                    <Route path="/today" element={<TodayPosts/>}/>
+                                    <Route path="/about" element={<AboutPage/>}/>
+                                    <Route path="/contact" element={<ContactPage/>}/>
+                                    <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
+                                    <Route path="/search" element={<Search/>}/>
+                                    <Route path="/admin" element={<Admin/>}/>
+                                    <Route path="/blog/:slug" element={<BlogPost/>}/>
+                                    <Route path="*" element={<NotFound/>}/>
+                                </Routes>
+                            </Suspense>
+                        </ErrorBoundary>
                         <Footer />
                     </BrowserRouter>
                 </TooltipProvider>
