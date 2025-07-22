@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import TagManager from 'react-gtm-module';
 import { useEffect } from "react";
 import CookieConsent from "./components/CookieConsent";
+import { PostCardSkeleton } from './components/SkeletonLoader';
 
 // Lazy load page components
 const Index = lazy(() => import('./pages/Index'));
@@ -39,7 +40,7 @@ const App = () => {
                     <Toaster/>
                     <Sonner/>
                     <BrowserRouter>
-                        <Suspense fallback={<div>Loading...</div>}>
+                        <Suspense fallback={<PostCardSkeleton />}>
                             <Routes>
                                 <Route path="/" element={<Index/>}/>
                                 <Route path="/blog" element={<Blog/>}/>
