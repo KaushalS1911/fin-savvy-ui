@@ -13,8 +13,8 @@ const Navigation = () => {
     { path: '/today', label: "Today" },
     { path: '/blog', label: 'Blogs' },
     { path: '/categories', label: 'Categories' },
-    { path: '/about', label: 'About Us' },
-    { path: '/contact', label: 'Contact Us' },
+    { path: '/about', label: 'About' },
+    { path: '/contact', label: 'Contact' },
   ];
 
   const isActive = (path: string) => location.pathname === path;

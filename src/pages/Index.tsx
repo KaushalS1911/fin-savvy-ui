@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import { getBlogs } from '../lib/api';
 import { PostCardSkeleton } from '../components/SkeletonLoader';
@@ -180,7 +178,6 @@ const Index = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
         <main className="max-w-7xl mx-auto px-4 py-8">
           <section className="mb-12">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -222,7 +219,6 @@ const Index = () => {
             <Sidebar />
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -233,8 +229,6 @@ const Index = () => {
   
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
-      
       <main className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="sr-only">
           Finance News, Insights & Market Updates
@@ -391,7 +385,6 @@ const Index = () => {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 };

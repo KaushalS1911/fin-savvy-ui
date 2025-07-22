@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import { Link } from 'react-router-dom';
 import { getBlogs } from '../lib/api';
@@ -151,7 +149,6 @@ const Blog = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
         <main className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center mb-12">
             <div className="h-10 bg-gray-200 rounded w-1/2 mx-auto mb-4 animate-pulse"></div>
@@ -168,7 +165,6 @@ const Blog = () => {
             <Sidebar />
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
@@ -179,7 +175,6 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center mb-12">
@@ -276,7 +271,6 @@ const Blog = () => {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 };

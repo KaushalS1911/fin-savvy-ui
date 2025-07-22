@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
 import { Search as SearchIcon } from 'lucide-react';
 import {getBlogs, getCategories} from "@/lib/api.ts";
 
@@ -116,7 +114,6 @@ const Search = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Search Header */}
@@ -286,7 +283,6 @@ const Search = () => {
         )}
       </main>
 
-      <Footer />
     </div>
   );
 };

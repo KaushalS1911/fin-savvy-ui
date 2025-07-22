@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
 import { getBlogBySlug, getBlogById, getBlogs } from '../lib/api';
 import { BlogPostSkeleton } from '../components/SkeletonLoader';
 import { isValidObjectId, generateSlug } from '../lib/utils';
@@ -271,9 +269,7 @@ const BlogPost = () => {
   if (loading) {
     return (
         <div className="min-h-screen bg-gray-50">
-          <Navigation />
           <BlogPostSkeleton />
-          <Footer />
         </div>
     );
   }
@@ -281,7 +277,6 @@ const BlogPost = () => {
   if (error || !post) {
     return (
         <div className="min-h-screen bg-gray-50">
-          <Navigation />
           <div className="max-w-4xl mx-auto px-4 py-8 text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Post Not Found</h1>
             <p className="text-gray-600 mb-6">The blog post you're looking for doesn't exist.</p>
@@ -292,15 +287,12 @@ const BlogPost = () => {
               Back to Blog
             </Link>
           </div>
-          <Footer />
         </div>
     );
   }
 
   return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
-
         <main className="max-w-4xl mx-auto px-4 py-8">
 
           <article className="max-w-4xl mx-auto px-4 py-8">
@@ -450,7 +442,6 @@ const BlogPost = () => {
           </article>
         </main>
 
-        <Footer />
       </div>
   );
 };

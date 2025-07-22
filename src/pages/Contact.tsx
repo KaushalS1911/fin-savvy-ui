@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
+import { Mail, User, MessageSquare, Phone } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -19,8 +18,6 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Contact form submitted:', formData);
-    // Add your form submission logic here
     alert('Thank you for your message! We\'ll get back to you soon.');
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
@@ -77,107 +74,101 @@ const Contact = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navigation />
-      <main className="flex-1 flex flex-col items-center justify-center">
-        <div className="max-w-7xl w-full px-4 py-8 mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Have a question about personal finance or want to suggest a topic for our next article? 
-              We'd love to hear from you and help you on your financial journey.
-            </p>
-          </div>
-          <div className="w-full max-w-2xl mx-auto">
-            <div className="bg-white rounded-lg shadow-md p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Your full name"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject *
-                  </label>
-                  <select
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                  >
-                    <option value="">Select a subject</option>
-                    <option value="general">General Inquiry</option>
-                    <option value="article-suggestion">Article Suggestion</option>
-                    <option value="financial-question">Financial Question</option>
-                    <option value="partnership">Partnership Opportunity</option>
-                    <option value="technical">Technical Issue</option>
-                    <option value="feedback">Feedback</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                    placeholder="Tell us more about your question or suggestion..."
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-primary text-white py-3 px-6 rounded-md hover:bg-primary/90 transition-colors font-medium"
-                >
-                  Send Message
-                </button>
-              </form>
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  <strong>Response Time:</strong> We typically respond to inquiries within 24-48 hours during business days.
-                </p>
-              </div>
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-white flex items-center justify-center py-12 px-4">
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden">
+        {/* Contact Info Panel */}
+        <div className="md:w-1/2 bg-primary text-white flex flex-col justify-center p-10">
+          <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
+          <p className="mb-6 opacity-90">Have a question, feedback, or partnership idea? Fill out the form or reach us directly:</p>
+          <div className="space-y-4 text-base">
+            <div className="flex items-center gap-3">
+              <Mail className="w-5 h-5 text-accent" />
+              <a href="mailto:info@howtoearningmoney.com" className="underline hover:text-accent transition">info@howtoearningmoney.com</a>
+            </div>
+            <div className="flex items-center gap-3">
+              <Phone className="w-5 h-5 text-accent" />
+              <span>+1 (555) 123-4567</span>
             </div>
           </div>
+          <div className="mt-8">
+            <h3 className="font-semibold mb-2">Business Hours</h3>
+            <p className="opacity-80">Mon-Fri: 9am - 6pm<br />Sat-Sun: Closed</p>
+          </div>
         </div>
-      </main>
-      <Footer />
+        {/* Form Panel */}
+        <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
+          <h2 className="text-2xl font-bold text-primary mb-6">Contact Us</h2>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-primary" size={20} />
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                placeholder="Full Name"
+                className="pl-10 pr-4 py-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-primary" size={20} />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                placeholder="Email Address"
+                className="pl-10 pr-4 py-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+            <div>
+              <select
+                id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="">Select a subject</option>
+                <option value="general">General Inquiry</option>
+                <option value="article-suggestion">Article Suggestion</option>
+                <option value="financial-question">Financial Question</option>
+                <option value="partnership">Partnership Opportunity</option>
+                <option value="technical">Technical Issue</option>
+                <option value="feedback">Feedback</option>
+              </select>
+            </div>
+            <div className="relative">
+              <MessageSquare className="absolute left-3 top-4 text-primary" size={20} />
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows={5}
+                placeholder="Your message..."
+                className="pl-10 pr-4 py-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary/90 transition-colors shadow"
+            >
+              Send Message
+            </button>
+          </form>
+          <div className="mt-6 text-center text-gray-500 text-sm">
+            <span>Prefer email? </span>
+            <a href="mailto:info@howtoearningmoney.com" className="text-primary underline hover:text-accent">info@howtoearningmoney.com</a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

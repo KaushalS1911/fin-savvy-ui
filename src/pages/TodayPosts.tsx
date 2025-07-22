@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 import { getBlogs } from '../lib/api';
 import { PostCardSkeleton } from '../components/SkeletonLoader';
@@ -90,7 +88,6 @@ const TodayPosts = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Today's Posts</h1>
@@ -154,7 +151,6 @@ const TodayPosts = () => {
           </div>
         )}
       </main>
-      <Footer />
     </div>
   );
 };

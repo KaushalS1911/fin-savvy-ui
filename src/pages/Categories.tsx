@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
 import { getCategories, getBlogs } from '../lib/api';
 import { CategoryCardSkeleton } from '../components/SkeletonLoader';
 
@@ -171,7 +169,6 @@ const Categories = () => {
   if (loading) {
     return (
         <div className="min-h-screen bg-gray-50">
-            <Navigation />
             <main className="max-w-7xl mx-auto px-4 py-8">
                 <div className="text-center mb-12">
                     <div className="h-10 bg-gray-200 rounded w-1/2 mx-auto mb-4 animate-pulse"></div>
@@ -183,7 +180,6 @@ const Categories = () => {
                     ))}
                 </div>
             </main>
-            <Footer />
         </div>
     );
   }
@@ -196,7 +192,6 @@ const Categories = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
@@ -302,7 +297,6 @@ const Categories = () => {
         </section>
       </main>
 
-      <Footer />
     </div>
   );
 };

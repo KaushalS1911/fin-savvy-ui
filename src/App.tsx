@@ -8,6 +8,11 @@ import TagManager from 'react-gtm-module';
 import { useEffect } from "react";
 import CookieConsent from "./components/CookieConsent";
 import { PostCardSkeleton } from './components/SkeletonLoader';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Footer from './components/Footer';
+import Navigation from './components/Navigation';
 
 // Lazy load page components
 const Index = lazy(() => import('./pages/Index'));
@@ -40,6 +45,7 @@ const App = () => {
                     <Toaster/>
                     <Sonner/>
                     <BrowserRouter>
+                        <Navigation />
                         <Suspense fallback={<PostCardSkeleton />}>
                             <Routes>
                                 <Route path="/" element={<Index/>}/>
@@ -47,14 +53,16 @@ const App = () => {
                                 <Route path="/categories" element={<Categories/>}/>
                                 <Route path="/category/:categorySlug" element={<CategoryPosts/>}/>
                                 <Route path="/today" element={<TodayPosts/>}/>
-                                <Route path="/about" element={<About/>}/>
-                                <Route path="/contact" element={<Contact/>}/>
+                                <Route path="/about" element={<AboutPage/>}/>
+                                <Route path="/contact" element={<ContactPage/>}/>
+                                <Route path="/privacy-policy" element={<PrivacyPolicy/>}/>
                                 <Route path="/search" element={<Search/>}/>
                                 <Route path="/admin" element={<Admin/>}/>
                                 <Route path="/blog/:slug" element={<BlogPost/>}/>
                                 <Route path="*" element={<NotFound/>}/>
                             </Routes>
                         </Suspense>
+                        <Footer />
                     </BrowserRouter>
                 </TooltipProvider>
             </QueryClientProvider>
