@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import { Search as SearchIcon } from 'lucide-react';
-import {getBlogs} from "@/lib/api.ts";
+import {getBlogs, getCategories} from "@/lib/api.ts";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -11,6 +11,7 @@ const Search = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [allPosts, setAllPosts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
     document.title = "Search Financial Articles | How to Earning Money";
@@ -70,6 +71,16 @@ const Search = () => {
       }
     };
     fetchBlogs();
+    // Fetch categories
+    const fetchCategories = async () => {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (err) {
+        setCategories([]);
+      }
+    };
+    fetchCategories();
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -143,16 +154,16 @@ const Search = () => {
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Popular Searches</h2>
             <div className="flex flex-wrap gap-3">
-              {['Index Funds', 'Emergency Fund', 'Credit Score', 'Retirement Planning', 'Real Estate', 'Tax Strategy', 'Budgeting', 'Debt Management'].map((term) => (
+              {categories.map((cat) => (
                 <button
-                  key={term}
+                  key={cat._id || cat.name}
                   onClick={() => {
-                    setSearchQuery(term);
+                    setSearchQuery(cat.name);
                     handleSearch({ preventDefault: () => {} } as React.FormEvent);
                   }}
                   className="px-4 py-2 bg-white border border-gray-300 rounded-full hover:border-primary hover:text-primary transition-colors"
                 >
-                  {term}
+                  {cat.name}
                 </button>
               ))}
             </div>
