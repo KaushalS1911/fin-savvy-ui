@@ -381,11 +381,7 @@ const BlogPost = () => {
                   {post.title}
                 </h1>
                 <div className="flex items-center text-gray-600 text-sm">
-                  {/*<span>By {post.author.name}</span>*/}
-                  {/*<span className="mx-2">•</span>*/}
                   <span>{new Date(post.createdAt || post.createdAt).toDateString()}</span>
-                  {/*<span className="mx-2">•</span>*/}
-                  {/*<span>{post.readTime} min read</span>*/}
                 </div>
               </div>
 
