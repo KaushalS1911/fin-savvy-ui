@@ -261,7 +261,7 @@ const Index = () => {
                     <h2 className="text-2xl lg:text-3xl font-bold mb-2 group-hover:text-accent transition-colors">
                       {featuredPosts[0].title}
                     </h2>
-                    <p className="text-gray-200 mb-3">{featuredPosts[0].excerpt}</p>
+                    <p className="text-gray-200 mb-3 line-clamp-2">{featuredPosts[0].excerpt}</p>
                     <div className="flex items-center text-sm text-gray-300">
                       <span>{new Date(featuredPosts[0].createdAt).toDateString()}</span>
                     </div>
