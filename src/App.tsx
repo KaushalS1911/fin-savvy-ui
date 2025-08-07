@@ -36,7 +36,8 @@ const App = () => {
 
     return (
         <>
-            <CookieConsent />
+            <h3>⚠ We're currently working on something great. This website is under construction — please check back soon!<h3/>
+{/*             <CookieConsent />
             <QueryClientProvider client={queryClient}>
                 <TooltipProvider>
                     <Toaster/>
@@ -64,7 +65,7 @@ const App = () => {
                         <Footer />
                     </BrowserRouter>
                 </TooltipProvider>
-            </QueryClientProvider>
+            </QueryClientProvider> */}
         </>
     );
 };
