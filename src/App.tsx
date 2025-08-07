@@ -36,7 +36,12 @@ const App = () => {
 
     return (
         <>
-            <h3>⚠ We're currently working on something great. This website is under construction — please check back soon!</h3>
+             <div className="flex items-center justify-center h-screen bg-gray-100 px-4 text-center">
+      <h3 className="text-2xl md:text-3xl font-semibold text-gray-800 leading-relaxed">
+        ⚠ We're currently working on something great. <br />
+        This website is under construction — please check back soon!
+      </h3>
+    </div>
 {/*             <CookieConsent />
             <QueryClientProvider client={queryClient}>
                 <TooltipProvider>
