@@ -36,7 +36,7 @@ const App = () => {
 
     return (
         <>
-            <h3>⚠ We're currently working on something great. This website is under construction — please check back soon!<h3/>
+            <h3>⚠ We're currently working on something great. This website is under construction — please check back soon!</h3>
 {/*             <CookieConsent />
             <QueryClientProvider client={queryClient}>
                 <TooltipProvider>
