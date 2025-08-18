@@ -3,6 +3,7 @@
 /* Set Poppins as the default font for the whole app */
 body, html, #root {
   font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  background-color: #fcf9ee !important;
 }
 
 @tailwind base;
